@@ -1,0 +1,1892 @@
+<title>Вика-Выручай CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#EEF1F3; --bg-rail:#E4E9EC; --surface:#FFFFFF; --surface-2:#F6F8F9;
+    --border:#D8DFE4; --border-soft:#E4E9EC;
+    --ink:#16212B; --ink-soft:#42525D; --muted:#71818C;
+    --accent:#BE5C29; --accent-ink:#FFFFFF; --accent-soft:#F4E1D2; --accent-soft-ink:#7A3A15;
+    --good:#2C8F5C; --good-soft:#DEF3E6;
+    --warn:#B4790A; --warn-soft:#FAEACB;
+    --crit:#C13F3F; --crit-soft:#FADEDE;
+    --info:#3568AF; --info-soft:#E1EAF7;
+    --shadow-sm: 0 1px 2px rgba(23,33,41,.06), 0 1px 1px rgba(23,33,41,.04);
+    --shadow-md: 0 8px 24px rgba(23,33,41,.10), 0 2px 6px rgba(23,33,41,.06);
+    --font-display:'Bricolage Grotesque', 'Segoe UI', sans-serif;
+    --font-body:'Manrope', 'Segoe UI', sans-serif;
+    --font-mono:'IBM Plex Mono', 'Consolas', monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0F161C; --bg-rail:#0A1014; --surface:#161F26; --surface-2:#1B252D;
+      --border:#28333B; --border-soft:#212B32;
+      --ink:#E8EEF2; --ink-soft:#B7C5CE; --muted:#82929C;
+      --accent:#E28A4E; --accent-ink:#1B1002; --accent-soft:#3B2718; --accent-soft-ink:#F4CBA4;
+      --good:#4FBE85; --good-soft:#173323;
+      --warn:#E3B24C; --warn-soft:#3B2D0D;
+      --crit:#E5726C; --crit-soft:#3D1A18;
+      --info:#79A6E3; --info-soft:#16273B;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-md: 0 10px 28px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0F161C; --bg-rail:#0A1014; --surface:#161F26; --surface-2:#1B252D;
+    --border:#28333B; --border-soft:#212B32;
+    --ink:#E8EEF2; --ink-soft:#B7C5CE; --muted:#82929C;
+    --accent:#E28A4E; --accent-ink:#1B1002; --accent-soft:#3B2718; --accent-soft-ink:#F4CBA4;
+    --good:#4FBE85; --good-soft:#173323;
+    --warn:#E3B24C; --warn-soft:#3B2D0D;
+    --crit:#E5726C; --crit-soft:#3D1A18;
+    --info:#79A6E3; --info-soft:#16273B;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-md: 0 10px 28px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);}
+  body{min-height:100vh;font-size:14px;line-height:1.45;}
+  ::selection{background:var(--accent-soft);color:var(--accent-soft-ink);}
+  button,input{font-family:inherit;font-size:inherit;color:inherit;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  table{border-collapse:collapse;width:100%;}
+  .num{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+
+  .app{display:grid;grid-template-columns:236px 1fr;min-height:100vh;}
+
+  /* ---- SIDEBAR ---- */
+  .rail{background:var(--bg-rail);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .brand{display:flex;align-items:center;gap:10px;padding:18px 16px 14px;}
+  .brand-mark{width:36px;height:36px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;flex:none;padding:3px;box-shadow:var(--shadow-sm);}
+  .brand-mark img{width:100%;height:100%;object-fit:contain;}
+  .theme-toggle{border:1px solid var(--border);background:var(--surface);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-soft);flex:none;}
+  .theme-toggle:hover{color:var(--accent);}
+  .brand-text{display:flex;flex-direction:column;line-height:1.2;}
+  .brand-text b{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.2px;}
+  .brand-text span{font-size:11px;color:var(--muted);}
+  .proto-badge{margin:0 16px 14px;padding:6px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent-soft-ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;}
+  nav.nav{display:flex;flex-direction:column;gap:2px;padding:4px 10px 16px;}
+  .nav-btn{display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;background:transparent;border-radius:9px;color:var(--ink-soft);text-align:left;cursor:pointer;font-weight:600;font-size:13.5px;}
+  .nav-btn svg{flex:none;opacity:.85;}
+  .nav-btn:hover{background:var(--surface-2);color:var(--ink);}
+  .nav-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);}
+  .nav-btn.active svg{opacity:1;color:var(--accent);}
+  .nav-badge{margin-left:auto;background:var(--crit-soft);color:var(--crit);font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:99px;}
+  .rail-foot{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border);font-size:11.5px;color:var(--muted);}
+
+  /* ---- MAIN ---- */
+  .main{min-width:0;display:flex;flex-direction:column;}
+  .topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:16px;padding:14px 28px;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+  .view-title{font-family:var(--font-display);font-weight:700;font-size:19px;margin:0;}
+  .view-sub{color:var(--muted);font-size:12.5px;margin-top:1px;}
+  .search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 12px;width:260px;color:var(--muted);}
+  .search input{border:none;background:transparent;outline:none;width:100%;color:var(--ink);}
+  .user-chip{display:flex;align-items:center;gap:9px;padding:6px 10px 6px 6px;border-radius:99px;background:var(--surface);border:1px solid var(--border);}
+  .avatar{width:28px;height:28px;border-radius:99px;background:var(--info-soft);color:var(--info);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11.5px;}
+  .user-chip .who{line-height:1.15;}
+  .user-chip b{font-size:12.5px;display:block;}
+  .user-chip span{font-size:10.5px;color:var(--muted);}
+
+  .content{padding:22px 28px 60px;flex:1;}
+  .view{display:flex;flex-direction:column;gap:20px;}
+  .view[hidden]{display:none;}
+
+  h2.section-h{font-family:var(--font-display);font-size:15px;font-weight:700;margin:0 0 2px;}
+  .section-desc{color:var(--muted);font-size:12.5px;margin:0;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-sm);}
+  .pad{padding:18px;}
+
+  /* KPI tiles */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:6px;}
+  .kpi .lbl{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+  .kpi .val{font-family:var(--font-display);font-size:26px;font-weight:700;}
+  .kpi .delta{font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px;width:fit-content;padding:2px 7px;border-radius:99px;}
+  .delta.up{color:var(--good);background:var(--good-soft);}
+  .delta.warn{color:var(--warn);background:var(--warn-soft);}
+  .delta.crit{color:var(--crit);background:var(--crit-soft);}
+
+  .grid-2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;}
+  .grid-2b{display:grid;grid-template-columns:1fr 1.4fr;gap:16px;}
+  @media (max-width:980px){.grid-2,.grid-2b{grid-template-columns:1fr;}}
+
+  /* chart */
+  .chart-wrap{padding:18px;}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:150px;margin-top:10px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%;}
+  .bar{width:100%;max-width:34px;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 65%, var(--surface)));}
+  .bar-col .wk{font-size:10.5px;color:var(--muted);}
+
+  .list-plain{display:flex;flex-direction:column;}
+  .list-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border-soft);}
+  .list-row:first-child{border-top:none;}
+  .dot{width:8px;height:8px;border-radius:99px;flex:none;}
+  .dot.crit{background:var(--crit);} .dot.warn{background:var(--warn);} .dot.info{background:var(--info);} .dot.good{background:var(--good);}
+  .list-row .t{flex:1;min-width:0;}
+  .list-row .t b{display:block;font-size:13px;}
+  .list-row .t span{font-size:11.5px;color:var(--muted);}
+  .list-row .meta{font-size:11.5px;color:var(--muted);font-family:var(--font-mono);}
+
+  /* pills */
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;}
+  .pill.good{background:var(--good-soft);color:var(--good);}
+  .pill.warn{background:var(--warn-soft);color:var(--warn);}
+  .pill.crit{background:var(--crit-soft);color:var(--crit);}
+  .pill.info{background:var(--info-soft);color:var(--info);}
+  .pill.plain{background:var(--surface-2);color:var(--ink-soft);border:1px solid var(--border);}
+
+  /* tabs */
+  .tabs{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);padding:3px;border-radius:10px;width:fit-content;}
+  .tab-btn{border:none;background:transparent;padding:7px 14px;border-radius:8px;font-weight:700;font-size:12.5px;color:var(--muted);cursor:pointer;}
+  .tab-btn.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);}
+
+  /* kanban */
+  .kanban{display:grid;grid-auto-flow:column;grid-auto-columns:250px;gap:12px;overflow-x:auto;padding-bottom:8px;}
+  .kcol{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;min-height:120px;}
+  .kcol-h{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 4px;}
+  .kcol-h b{font-size:12px;}
+  .kcol-h .cnt{font-family:var(--font-mono);font-size:11px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:1px 7px;border-radius:99px;}
+  .kcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 11px;cursor:grab;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:5px;}
+  .kcard:active{cursor:grabbing;}
+  .kcard.drag-ghost{opacity:.4;}
+  .kcard b{font-size:12.5px;}
+  .kcard .addr{font-size:11px;color:var(--muted);}
+  .kcard .foot{display:flex;align-items:center;justify-content:space-between;margin-top:2px;}
+  .kcard .price{font-family:var(--font-mono);font-size:11.5px;font-weight:700;color:var(--accent-soft-ink);background:var(--accent-soft);padding:1px 7px;border-radius:6px;}
+  .kcol.dragover{outline:2px dashed var(--accent);outline-offset:-4px;}
+
+  /* tables */
+  .table-wrap{overflow-x:auto;}
+  table.grid th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:left;padding:9px 12px;background:var(--surface-2);border-bottom:1px solid var(--border);position:sticky;top:0;}
+  table.grid td{padding:11px 12px;border-bottom:1px solid var(--border-soft);font-size:13px;vertical-align:middle;}
+  table.grid tr:last-child td{border-bottom:none;}
+  table.grid tr.rowlink{cursor:pointer;}
+  table.grid tr.rowlink:hover td{background:var(--surface-2);}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;}
+
+  /* calendar */
+  .cal{display:grid;grid-template-columns:120px repeat(7,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+  .cal .hcell{background:var(--surface-2);padding:9px 10px;font-size:11.5px;font-weight:700;border-bottom:1px solid var(--border);border-left:1px solid var(--border-soft);}
+  .cal .hcell:first-child{border-left:none;}
+  .cal .mrow-label{background:var(--surface-2);padding:12px 10px;font-size:12px;font-weight:700;border-top:1px solid var(--border-soft);display:flex;align-items:center;}
+  .cal .cell{border-top:1px solid var(--border-soft);border-left:1px solid var(--border-soft);min-height:64px;padding:5px;display:flex;flex-direction:column;gap:4px;}
+  .ev{border-radius:7px;padding:4px 7px;font-size:10.8px;font-weight:700;cursor:pointer;line-height:1.25;}
+  .ev.plan{background:var(--info-soft);color:var(--info);} .ev.emg{background:var(--crit-soft);color:var(--crit);} .ev.diag{background:var(--warn-soft);color:var(--warn);} .ev.done{background:var(--good-soft);color:var(--good);}
+
+  /* employee cards */
+  .emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+  .emp-card{padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .emp-top{display:flex;gap:10px;align-items:center;}
+  .emp-ava{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent-soft-ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-family:var(--font-display);flex:none;}
+  .emp-top b{display:block;font-size:13.5px;}
+  .emp-top span{font-size:11.5px;color:var(--muted);}
+  .meter{height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;}
+  .meter i{display:block;height:100%;background:var(--accent);}
+  .emp-stats{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);}
+
+  /* task board */
+  .task-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .task-item{display:flex;align-items:flex-start;gap:9px;padding:9px 10px;border:1px solid var(--border-soft);border-radius:9px;background:var(--surface);margin-bottom:8px;}
+  .task-item input[type=checkbox]{margin-top:3px;accent-color:var(--accent);width:15px;height:15px;flex:none;}
+  .task-item .who{font-size:10.5px;color:var(--accent-soft-ink);background:var(--accent-soft);padding:0 6px;border-radius:6px;display:inline-block;margin-bottom:3px;font-weight:700;}
+  .task-item span.txt{font-size:12.6px;}
+  .task-item.done span.txt{text-decoration:line-through;color:var(--muted);}
+
+  /* drawer */
+  .overlay{position:fixed;inset:0;background:rgba(10,14,18,.42);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:20;}
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100vh;width:min(420px,92vw);background:var(--surface);border-left:1px solid var(--border);box-shadow:var(--shadow-md);transform:translateX(100%);transition:transform .2s ease;z-index:21;overflow-y:auto;}
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);}
+  .drawer-close{border:none;background:var(--surface-2);width:28px;height:28px;border-radius:8px;cursor:pointer;color:var(--ink-soft);font-size:15px;}
+  .drawer-body{padding:16px 18px 30px;display:flex;flex-direction:column;gap:16px;}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:12.5px;}
+  .kv b{color:var(--muted);font-weight:600;}
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-item{padding:10px 0 10px 18px;border-left:2px solid var(--border);position:relative;}
+  .tl-item::before{content:"";position:absolute;left:-5px;top:14px;width:8px;height:8px;border-radius:99px;background:var(--accent);}
+  .tl-item:last-child{border-left:2px solid transparent;}
+  .tl-item b{font-size:12.5px;display:block;} .tl-item span{font-size:11.5px;color:var(--muted);}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:640px){.two-col{grid-template-columns:1fr;}}
+  .supplier{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border-soft);}
+  .supplier:first-child{border-top:none;}
+
+  .funnel{display:flex;flex-direction:column;gap:8px;}
+  .fstep{display:grid;grid-template-columns:150px 1fr 50px;gap:10px;align-items:center;font-size:12px;}
+  .ftrack{background:var(--surface-2);border-radius:99px;height:14px;overflow:hidden;}
+  .ffill{height:100%;background:var(--accent);border-radius:99px;}
+
+  /* nav groups */
+  .nav-group-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800;padding:14px 12px 4px;}
+  .nav-group-label:first-child{padding-top:4px;}
+
+  /* channel badges (brand-ish, fixed across themes) */
+  .chan-badge{font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:99px;display:inline-block;letter-spacing:.02em;white-space:nowrap;}
+  .chan-tg{background:#2AA9E0;color:#fff;} .chan-wa{background:#1FA855;color:#fff;}
+  .chan-ig{background:linear-gradient(135deg,#5851DB,#C13584,#F77737);color:#fff;}
+  .chan-avito{background:#7C5CFF;color:#fff;} .chan-email{background:#5B6B77;color:#fff;}
+  .chan-site{background:var(--accent);color:var(--accent-ink);}
+
+  /* contact center */
+  .chan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;}
+  .chan-card{padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .chan-card .top{display:flex;align-items:center;gap:10px;}
+  .chan-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none;color:#fff;}
+
+  /* chat */
+  .chat-wrap{display:grid;grid-template-columns:290px 1fr;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow-sm);height:600px;}
+  .chat-list{border-right:1px solid var(--border);overflow-y:auto;background:var(--surface-2);}
+  .chat-item{display:flex;gap:9px;padding:11px 13px;border-bottom:1px solid var(--border-soft);cursor:pointer;align-items:flex-start;}
+  .chat-item:hover{background:var(--surface);}
+  .chat-item.active{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent);}
+  .chat-item .ava{width:32px;height:32px;border-radius:99px;background:var(--info-soft);color:var(--info);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10.5px;flex:none;}
+  .chat-item .meta{flex:1;min-width:0;}
+  .chat-item .row1{display:flex;justify-content:space-between;gap:6px;align-items:baseline;}
+  .chat-item .row1 b{font-size:12.3px;}
+  .chat-item .time{font-size:10px;color:var(--muted);flex:none;}
+  .chat-item .preview{font-size:11.3px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+  .chat-item .unread{background:var(--accent);color:var(--accent-ink);font-size:10px;font-weight:800;border-radius:99px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px;flex:none;}
+  .chat-thread{display:flex;flex-direction:column;min-height:0;}
+  .chat-thread-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;justify-content:space-between;}
+  .chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;}
+  .msg{max-width:70%;padding:9px 12px;border-radius:12px;font-size:12.6px;line-height:1.42;}
+  .msg.in{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border-soft);border-bottom-left-radius:3px;}
+  .msg.out{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:3px;}
+  .msg.bot{align-self:flex-end;background:var(--info-soft);color:var(--info);border:1px dashed var(--info);border-bottom-right-radius:3px;}
+  .msg .mtime{display:block;font-size:9.3px;opacity:.7;margin-top:4px;}
+  .chat-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);}
+  .chat-input input{flex:1;border:1px solid var(--border);background:var(--surface-2);border-radius:10px;padding:9px 12px;outline:none;color:var(--ink);}
+  .chat-input button{border:none;background:var(--accent);color:var(--accent-ink);padding:0 18px;border-radius:10px;font-weight:700;cursor:pointer;}
+
+  /* toggle + slider */
+  .toggle{position:relative;width:38px;height:22px;flex:none;display:inline-block;}
+  .toggle input{opacity:0;width:0;height:0;position:absolute;}
+  .toggle .track{position:absolute;inset:0;background:var(--border);border-radius:99px;transition:background .15s;cursor:pointer;}
+  .toggle .track::after{content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;background:var(--surface);border-radius:99px;transition:transform .15s;box-shadow:var(--shadow-sm);}
+  .toggle input:checked + .track{background:var(--accent);}
+  .toggle input:checked + .track::after{transform:translateX(16px);}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--border);}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:99px;background:var(--accent);cursor:pointer;border:2px solid var(--surface);box-shadow:var(--shadow-sm);}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:99px;background:var(--accent);cursor:pointer;border:2px solid var(--surface);}
+
+  /* skill / channel toggle rows */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-top:1px solid var(--border-soft);}
+  .toggle-row:first-child{border-top:none;}
+  .toggle-row span.name{font-size:12.5px;}
+
+  /* import */
+  .import-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+  .import-card{padding:16px;display:flex;flex-direction:column;gap:9px;}
+  .import-card .fields{font-size:11px;color:var(--muted);}
+  .upload-btn{display:inline-flex;align-items:center;gap:7px;border:1.5px dashed var(--border);background:var(--surface-2);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:700;cursor:pointer;color:var(--ink-soft);}
+  .upload-btn:hover{border-color:var(--accent);color:var(--accent-soft-ink);}
+  .upload-btn svg{flex:none;}
+  .import-preview{margin-top:2px;font-size:11.3px;background:var(--surface-2);border:1px solid var(--border-soft);border-radius:8px;padding:9px 10px;}
+  .import-flash{animation:import-pulse 1s ease;}
+  @keyframes import-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);}100%{box-shadow:0 0 0 14px transparent;}}
+
+  /* generic form fields (documents module) */
+  .field{display:flex;flex-direction:column;gap:5px;font-size:11.3px;color:var(--muted);font-weight:600;}
+  .field input, .field select{font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;}
+  .field input:disabled{color:var(--muted);}
+
+  /* printable document page — intentionally fixed "paper" look, independent of app theme */
+  .doc-page{background:#ffffff;color:#1b1f23;border-radius:10px;padding:32px 36px;font-family:var(--font-body);font-size:12.3px;box-shadow:var(--shadow-md);max-width:760px;margin:0 auto;}
+  .doc-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #1b1f23;padding-bottom:12px;margin-bottom:14px;}
+  .doc-num{text-align:right;font-weight:700;white-space:nowrap;}
+  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:14px;}
+  .doc-title{text-align:center;font-family:var(--font-display);font-weight:700;font-size:16px;margin:4px 0 14px;color:#1b1f23;}
+  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11.3px;}
+  table.doc-table th, table.doc-table td{border:1px solid #999;padding:6px 8px;text-align:left;color:#1b1f23;}
+  table.doc-table td.num, table.doc-table th.num{text-align:right;font-family:var(--font-mono);}
+  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 22px;}
+  .doc-note{font-size:11.3px;color:#4a5560;margin:10px 0;}
+  .doc-sign-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .doc-sign{margin-top:22px;position:relative;font-size:11.6px;}
+  .doc-sign-line{position:relative;min-height:20px;}
+  .doc-sign-img{height:44px;position:absolute;left:70px;top:-30px;pointer-events:none;}
+  .doc-stamp-img{height:88px;opacity:.88;position:absolute;right:6px;top:-34px;pointer-events:none;}
+  @media print{
+    body *{visibility:hidden;}
+    .printable, .printable *{visibility:visible;}
+    .printable{position:absolute;left:0;top:0;width:100%;padding:0;}
+    .doc-page{box-shadow:none;max-width:100%;}
+  }
+
+  @media (max-width:860px){
+    .app{grid-template-columns:1fr;}
+    .rail{position:relative;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;}
+    .brand{padding:12px;} .proto-badge{display:none;} nav.nav{flex-direction:row;flex-wrap:wrap;padding:8px;} .rail-foot{display:none;}
+    .search{width:150px;}
+  }
+</style>
+
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-mark"><img src="logo.svg" alt="Вика-выручай"></div>
+      <div class="brand-text"><b>Вика-Выручай</b><span>CRM для сервисной компании</span></div>
+    </div>
+    <div class="proto-badge">Прототип · демо-данные</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">г. Омск, ул. 4-я Енисейская, 21<br>+7 (3812) 29-39-79 · ежедневно 08:00–21:00</div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <h1 class="view-title" id="view-title">Дашборд</h1>
+        <div class="view-sub" id="view-sub">Обзор за сегодня</div>
+      </div>
+      <div class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input placeholder="Клиент, адрес, номер наряда…">
+      </div>
+      <button class="theme-toggle" id="theme-toggle-btn" title="Светлая / тёмная тема" aria-label="Переключить тему">
+        <svg id="theme-icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><line x1="12" y1="2.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="4.2" y1="4.2" x2="6" y2="6"/><line x1="18" y1="18" x2="19.8" y2="19.8"/><line x1="2.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="4.2" y1="19.8" x2="6" y2="18"/><line x1="18" y1="6" x2="19.8" y2="4.2"/></svg>
+        <svg id="theme-icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" hidden><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z"/></svg>
+      </button>
+      <div class="user-chip">
+        <div class="avatar">ВК</div>
+        <div class="who"><b>Виктория Коротынская</b><span>Руководитель</span></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section class="view" id="view-dashboard">
+        <div class="kpi-grid" id="kpi-grid"></div>
+        <div class="grid-2">
+          <div class="card chart-wrap">
+            <div class="section-head"><div><h2 class="section-h">Выручка по неделям</h2><p class="section-desc">Разовые работы + подписки + Б2Б, ₽</p></div></div>
+            <div class="bars" id="rev-bars"></div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Ближайшие события и риски</h2>
+            <p class="section-desc" style="margin-bottom:8px;">SLA, визиты, договоры</p>
+            <div class="list-plain" id="risk-list"></div>
+          </div>
+        </div>
+        <div class="grid-2b">
+          <div class="card pad">
+            <h2 class="section-h">Мои задачи сегодня</h2>
+            <p class="section-desc" style="margin-bottom:8px;">Виктория Коротынская</p>
+            <div id="dash-tasks"></div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Воронка «Заявка → Оплата» (частные клиенты)</h2>
+            <p class="section-desc" style="margin-bottom:10px;">Последние 30 дней</p>
+            <div class="funnel" id="dash-funnel"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEADS -->
+      <section class="view" id="view-leads" hidden>
+        <div class="section-head">
+          <div><h2 class="section-h">Лиды</h2><p class="section-desc">Все входящие обращения из мессенджеров, соцсетей и агрегаторов — до того как стать сделкой</p></div>
+          <div class="filters" id="lead-filters">
+            <button class="tab-btn active" data-f="all">Все</button>
+            <button class="tab-btn" data-f="new">Новые</button>
+            <button class="tab-btn" data-f="progress">В работе</button>
+            <button class="tab-btn" data-f="qualified">Квалифицированы</button>
+          </div>
+        </div>
+        <div class="kpi-grid" id="leads-kpi"></div>
+        <div class="card table-wrap"><table class="grid" id="leads-table"></table></div>
+      </section>
+
+      <!-- DEALS -->
+      <section class="view" id="view-deals" hidden>
+        <div class="section-head">
+          <div><h2 class="section-h">Воронки сделок</h2><p class="section-desc">Перетаскивайте карточки между этапами</p></div>
+          <div class="tabs" id="deal-tabs">
+            <button class="tab-btn active" data-pipe="b2c">Частные клиенты</button>
+            <button class="tab-btn" data-pipe="b2b">УК / ТСЖ</button>
+          </div>
+        </div>
+        <div class="kanban" id="kanban-b2c"></div>
+        <div class="kanban" id="kanban-b2b" style="display:none;"></div>
+      </section>
+
+      <!-- ORDERS -->
+      <section class="view" id="view-orders" hidden>
+        <div class="section-head">
+          <div><h2 class="section-h">Наряды</h2><p class="section-desc">Диспетчеризация мастеров по заявкам</p></div>
+          <div class="filters" id="order-filters">
+            <button class="tab-btn active" data-f="all">Все</button>
+            <button class="tab-btn" data-f="emg">Аварийные</button>
+            <button class="tab-btn" data-f="today">Сегодня</button>
+            <button class="tab-btn" data-f="done">Завершённые</button>
+          </div>
+        </div>
+        <div class="card table-wrap">
+          <table class="grid" id="orders-table"></table>
+        </div>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section class="view" id="view-documents" hidden>
+        <div class="section-head"><div><h2 class="section-h">Документы</h2><p class="section-desc">Счета, акты и накладные — с печатью и подписью, готовые к печати в PDF</p></div></div>
+        <div class="card pad" style="background:var(--info-soft);border:none;">
+          <b style="font-size:12.5px;color:var(--info);">В планах:</b> <span style="font-size:12.3px;">формирование пакета документов прямо из карточки сделки одной кнопкой — и отправка клиенту в мессенджер или на почту второй кнопкой.</span>
+        </div>
+        <div class="grid-2">
+          <div class="card pad">
+            <h2 class="section-h">Реквизиты и печать</h2>
+            <p class="section-desc" style="margin-bottom:10px;">Подставляются во все документы. ИНН и банковские реквизиты — заполните перед реальным использованием.</p>
+            <div class="two-col" id="company-fields"></div>
+            <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;">
+              <div>
+                <b style="font-size:12px;">Печать (PNG)</b><br>
+                <label class="upload-btn" for="stamp-file" style="margin-top:6px;">${ICONS.import} Загрузить PNG<input type="file" id="stamp-file" accept="image/png" style="display:none;"></label>
+                <div id="stamp-preview" style="margin-top:8px;"></div>
+              </div>
+              <div>
+                <b style="font-size:12px;">Подпись (PNG)</b><br>
+                <label class="upload-btn" for="sign-file" style="margin-top:6px;">${ICONS.import} Загрузить PNG<input type="file" id="sign-file" accept="image/png" style="display:none;"></label>
+                <div id="sign-preview" style="margin-top:8px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Новый документ</h2>
+            <div class="two-col" style="margin-top:10px;">
+              <label class="field">Тип документа<select id="doc-type"><option value="invoice">Счёт на оплату</option><option value="act">Акт выполненных работ</option><option value="torg12">Накладная ТОРГ-12</option></select></label>
+              <label class="field">Клиент / контрагент<select id="doc-client"></select></label>
+              <label class="field">Основание (наряд, договор)<input id="doc-basis" placeholder="например, Наряд №2478"></label>
+              <label class="field">Номер / дата<input id="doc-numdate" disabled></label>
+            </div>
+            <div style="margin-top:14px;">
+              <div class="table-wrap"><table class="grid" id="doc-items-table"></table></div>
+              <button class="tab-btn" id="doc-add-row" style="margin-top:8px;">+ Добавить строку</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;flex-wrap:wrap;gap:10px;">
+              <div style="font-size:13px;">Итого: <b class="num" id="doc-total-preview">0,00 ₽</b></div>
+              <button class="tab-btn active" id="doc-generate" style="padding:10px 18px;">Сформировать документ</button>
+            </div>
+          </div>
+        </div>
+        <div class="card pad" id="doc-preview-card" hidden>
+          <div class="section-head"><h2 class="section-h">Предпросмотр</h2><button class="tab-btn active" id="doc-print-btn">🖶 Печать / сохранить PDF</button></div>
+          <div id="doc-print-area" style="margin-top:14px;"></div>
+        </div>
+        <div class="card table-wrap">
+          <table class="grid" id="doc-log-table"></table>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section class="view" id="view-clients" hidden>
+        <div class="section-head"><div><h2 class="section-h">Клиенты и объекты</h2><p class="section-desc">Частные лица и обслуживаемые управляющие компании</p></div></div>
+        <div class="card table-wrap"><table class="grid" id="clients-table"></table></div>
+      </section>
+
+      <!-- CALENDAR -->
+      <section class="view" id="view-calendar" hidden>
+        <div class="section-head"><div><h2 class="section-h">Календарь мастеров</h2><p class="section-desc" id="cal-week"></p></div></div>
+        <div class="cal" id="cal-grid"></div>
+      </section>
+
+      <!-- SUBSCRIPTIONS -->
+      <section class="view" id="view-subs" hidden>
+        <div class="section-head"><div><h2 class="section-h">Подписки на обслуживание</h2><p class="section-desc">Тарифы «Выручай» / «Под контролем» / «Без проблем»</p></div></div>
+        <div class="kpi-grid" id="subs-kpi"></div>
+        <div class="card table-wrap"><table class="grid" id="subs-table"></table></div>
+      </section>
+
+      <!-- B2B CONTRACTS -->
+      <section class="view" id="view-b2b" hidden>
+        <div class="section-head"><div><h2 class="section-h">Договоры с УК и ТСЖ</h2><p class="section-desc">Аварийно-диспетчерское обслуживание: будни 17:00–08:00, выходные круглосуточно</p></div></div>
+        <div class="card table-wrap"><table class="grid" id="b2b-table"></table></div>
+      </section>
+
+      <!-- CONTACT CENTER -->
+      <section class="view" id="view-contactcenter" hidden>
+        <div class="section-head"><div><h2 class="section-h">Контакт-центр</h2><p class="section-desc">Каналы, из которых в CRM попадают обращения клиентов</p></div></div>
+        <div class="chan-grid" id="chan-grid"></div>
+        <div class="card pad">
+          <h2 class="section-h">Подключение по API / Webhook</h2>
+          <p class="section-desc" style="margin-bottom:10px;">Любой источник, умеющий отправить POST-запрос — сайт, IP-телефония, свой мессенджер-бот — подключается сюда без разработки на стороне CRM.</p>
+          <div class="kv" style="grid-template-columns:150px 1fr;">
+            <b>URL приёма вебхука</b><span class="num">https://in.vikahelp-crm.ru/webhooks/incoming</span>
+            <b>Секретный ключ</b><span class="num">••••••••••••ba41</span>
+            <b>Формат</b><span>JSON, поля: source, contact, text, timestamp</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section class="view" id="view-chat" hidden>
+        <div class="section-head"><div><h2 class="section-h">Чат</h2><p class="section-desc">Переписки со всех каналов в одном окне оператора</p></div></div>
+        <div class="chat-wrap">
+          <div class="chat-list" id="chat-list"></div>
+          <div class="chat-thread" id="chat-thread"></div>
+        </div>
+      </section>
+
+      <!-- AI AGENT -->
+      <section class="view" id="view-aiagent" hidden>
+        <div class="section-head"><div><h2 class="section-h">ИИ-агент</h2><p class="section-desc">Автоматические ответы в чатах на нейросети — например, YandexGPT</p></div></div>
+        <div class="grid-2">
+          <div class="card pad">
+            <h2 class="section-h">Подключение модели</h2>
+            <div class="kv" style="grid-template-columns:140px 1fr;margin-top:10px;">
+              <b>Провайдер</b><span>YandexGPT (YandexCloud ML)</span>
+              <b>Модель</b><span>yandexgpt/latest, Pro</span>
+              <b>API-ключ</b><span class="num">••••••••••••7f0c</span>
+              <b>Статус</b><span class="pill good">подключено</span>
+            </div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Параметры общения</h2>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-top:10px;">
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Температура (креативность)</span><span class="num" id="temp-val">0.4</span></div><input type="range" min="0" max="1" step="0.1" value="0.4" id="temp-slider"></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Длина ответа</span><span class="num" id="len-val">Средняя</span></div><input type="range" min="0" max="2" step="1" value="1" id="len-slider"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:12.5px;">Уточняющие вопросы перед ответом</span><label class="toggle"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:12.5px;">Эскалация на оператора при аварии</span><label class="toggle"><input type="checkbox" checked><span class="track"></span></label></div>
+            </div>
+          </div>
+        </div>
+        <div class="card pad">
+          <h2 class="section-h">Системный промпт</h2>
+          <textarea id="ai-prompt" style="width:100%;margin-top:10px;min-height:110px;font-family:var(--font-mono);font-size:12px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--ink);resize:vertical;">Ты — ассистент компании «Вика-выручай» (ЖКХ-сервис, Омск). Отвечай вежливо и по делу, коротко. Всегда предлагай бесплатную диагностику вместо оценки цены "на глаз". Никогда не называй финальную стоимость без диагностики — только диапазон из прайса. При словах "залив", "нет света", "прорвало" — сразу помечай обращение как аварийное и уведомляй дежурного оператора.</textarea>
+        </div>
+        <div class="grid-2">
+          <div class="card pad">
+            <h2 class="section-h">Навыки агента</h2>
+            <div id="ai-skills" style="margin-top:8px;"></div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Каналы, где отвечает агент</h2>
+            <div id="ai-channels" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KNOWLEDGE BASE -->
+      <section class="view" id="view-kb" hidden>
+        <div class="section-head"><div><h2 class="section-h">База знаний</h2><p class="section-desc">Документы, которыми пользуются операторы и ИИ-агент при ответах</p></div></div>
+        <div class="kpi-grid" id="kb-kpi"></div>
+        <div class="card table-wrap"><table class="grid" id="kb-table"></table></div>
+      </section>
+
+      <!-- WAREHOUSE -->
+      <section class="view" id="view-stock" hidden>
+        <div class="section-head"><div><h2 class="section-h">Склад, инструмент и снабжение</h2><p class="section-desc">Остатки материалов и закреплённое за мастерами оборудование</p></div></div>
+        <div class="grid-2">
+          <div class="card table-wrap"><table class="grid" id="stock-table"></table></div>
+          <div class="card pad">
+            <h2 class="section-h">Инструмент у мастеров</h2>
+            <div class="list-plain" id="tools-list" style="margin-top:6px;"></div>
+          </div>
+        </div>
+        <div class="card pad">
+          <h2 class="section-h">Поставщики</h2>
+          <div id="suppliers-list"></div>
+        </div>
+      </section>
+
+      <!-- STAFF -->
+      <section class="view" id="view-staff" hidden>
+        <div class="section-head"><div><h2 class="section-h">Сотрудники</h2><p class="section-desc">Загрузка, специализация, рейтинг клиентов</p></div></div>
+        <div class="emp-grid" id="staff-grid"></div>
+      </section>
+
+      <!-- TASKS -->
+      <section class="view" id="view-tasks" hidden>
+        <div class="section-head"><div><h2 class="section-h">Постановка задач</h2><p class="section-desc">Отметьте — и задача переедет в «Готово»</p></div></div>
+        <div class="task-cols">
+          <div><h2 class="section-h" style="margin-bottom:8px;">Сегодня</h2><div id="tasks-today"></div></div>
+          <div><h2 class="section-h" style="margin-bottom:8px;">На неделе</h2><div id="tasks-week"></div></div>
+          <div><h2 class="section-h" style="margin-bottom:8px;">Готово</h2><div id="tasks-done"></div></div>
+        </div>
+      </section>
+
+      <!-- IMPORT -->
+      <section class="view" id="view-import" hidden>
+        <div class="section-head">
+          <div><h2 class="section-h">Импорт данных</h2><p class="section-desc">Массовая загрузка справочников из Excel/CSV — файлы читаются прямо в браузере</p></div>
+          <button class="tab-btn active" id="btn-open-import" style="padding:9px 16px;">Загрузить базу данных</button>
+        </div>
+        <div class="import-grid" id="import-grid"></div>
+        <div class="card pad">
+          <h2 class="section-h">Журнал импорта</h2>
+          <div class="list-plain" id="import-log"></div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section class="view" id="view-analytics" hidden>
+        <div class="section-head"><div><h2 class="section-h">Аналитика</h2><p class="section-desc">Выручка по направлениям, конверсия, сервис</p></div></div>
+        <div class="kpi-grid" id="an-kpi"></div>
+        <div class="grid-2">
+          <div class="card pad">
+            <h2 class="section-h">Выручка по направлениям, ₽/мес</h2>
+            <div id="an-channels" style="margin-top:12px;"></div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Воронка конверсии (частные клиенты)</h2>
+            <div class="funnel" id="an-funnel" style="margin-top:12px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORT BUILDER -->
+      <section class="view" id="view-reports" hidden>
+        <div class="section-head"><div><h2 class="section-h">Мастер отчётов</h2><p class="section-desc">Отчёт по любому разделу CRM за любой период — с графиком, расшифровкой и рекомендациями</p></div></div>
+        <div class="card pad">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:end;">
+            <label class="field" style="min-width:220px;">Раздел<select id="rep-entity"></select></label>
+            <label class="field" style="min-width:170px;">Период<select id="rep-period">
+              <option value="1">Сегодня</option><option value="7">Неделя</option><option value="30" selected>Месяц</option><option value="90">Квартал</option><option value="365">Год</option><option value="custom">Произвольный период</option>
+            </select></label>
+            <label class="field" id="rep-from-wrap" style="display:none;">С<input type="date" id="rep-from"></label>
+            <label class="field" id="rep-to-wrap" style="display:none;">По<input type="date" id="rep-to"></label>
+            <button class="tab-btn active" id="rep-generate" style="padding:10px 18px;">Сформировать отчёт</button>
+          </div>
+        </div>
+        <div id="report-output"></div>
+      </section>
+
+      <!-- ACCESS CONTROL -->
+      <section class="view" id="view-access" hidden>
+        <div class="section-head"><div><h2 class="section-h">Доступы</h2><p class="section-desc">Права ролей на разделы и данные CRM</p></div></div>
+        <div class="card pad" style="background:var(--info-soft);border:none;"><span style="font-size:12.3px;color:var(--info);">Нет доступа / Просмотр / Редактирование / Полный доступ — уровень задаётся отдельно для каждой роли и раздела.</span></div>
+        <div class="card table-wrap"><table class="grid" id="access-table"></table></div>
+      </section>
+
+      <!-- ADMIN PANEL -->
+      <section class="view" id="view-admin" hidden>
+        <div class="section-head"><div><h2 class="section-h">Админ-панель</h2><p class="section-desc">Сотрудники, приглашения и учётные записи в CRM</p></div></div>
+        <div class="kpi-grid" id="admin-kpi"></div>
+        <div class="card pad">
+          <h2 class="section-h">Пригласить сотрудника</h2>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-top:10px;">
+            <label class="field" style="min-width:240px;">Email<input type="email" id="invite-email" placeholder="ivan@vikahelp.ru"></label>
+            <label class="field" style="min-width:180px;">Роль<select id="invite-role"></select></label>
+            <button class="tab-btn active" id="invite-send" style="padding:10px 18px;">Отправить приглашение</button>
+          </div>
+        </div>
+        <div class="card table-wrap"><table class="grid" id="users-table"></table></div>
+        <div class="card table-wrap" id="invites-card"><table class="grid" id="invites-table"></table></div>
+        <div class="card pad">
+          <h2 class="section-h">Журнал действий</h2>
+          <div class="list-plain" id="audit-log" style="margin-top:6px;"></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings" hidden>
+        <div class="section-head"><div><h2 class="section-h">Настройки</h2><p class="section-desc">Общие параметры компании и CRM</p></div></div>
+        <div class="grid-2">
+          <div class="card pad">
+            <h2 class="section-h">О компании</h2>
+            <div class="two-col" id="settings-company" style="margin-top:10px;"></div>
+          </div>
+          <div class="card pad">
+            <h2 class="section-h">Оформление</h2>
+            <label class="field" style="margin-top:10px;max-width:240px;">Тема интерфейса<select id="theme-select">
+              <option value="system">Системная</option><option value="light">Светлая</option><option value="dark">Тёмная</option>
+            </select></label>
+            <div style="margin-top:16px;display:flex;flex-direction:column;">
+              <div class="toggle-row"><span class="name">Email-уведомления менеджерам</span><label class="toggle"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div class="toggle-row"><span class="name">Telegram-уведомления диспетчерам о новых лидах</span><label class="toggle"><input type="checkbox" checked><span class="track"></span></label></div>
+              <div class="toggle-row"><span class="name">Push-уведомления в браузере</span><label class="toggle"><input type="checkbox"><span class="track"></span></label></div>
+            </div>
+          </div>
+        </div>
+        <div class="card pad">
+          <h2 class="section-h">Тариф и биллинг</h2>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:10px;">
+            <div style="font-size:12.6px;color:var(--ink-soft);">Тариф «Бизнес» · до 15 пользователей · 4 990 ₽/мес · продлится 01.11.2026</div>
+            <button class="tab-btn">Изменить тариф</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div><div style="font-family:var(--font-display);font-weight:700;font-size:15px;" id="drawer-title">—</div><div class="view-sub" id="drawer-sub"></div></div>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ---------------- THEME ---------------- */
+function currentEffectiveTheme(){
+  const explicit = document.documentElement.dataset.theme;
+  if(explicit==='light' || explicit==='dark') return explicit;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+function applyTheme(v){
+  try{ localStorage.setItem('vika_theme', v); }catch(e){}
+  if(v==='system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = v;
+  updateThemeIcon();
+  const sel = document.getElementById('theme-select'); if(sel) sel.value = v;
+}
+function updateThemeIcon(){
+  const eff = currentEffectiveTheme();
+  const sun = document.getElementById('theme-icon-sun'), moon = document.getElementById('theme-icon-moon');
+  if(sun && moon){ sun.hidden = eff==='dark'; moon.hidden = eff!=='dark'; }
+}
+(function(){
+  try{
+    const saved = localStorage.getItem('vika_theme');
+    if(saved==='light' || saved==='dark') document.documentElement.dataset.theme = saved;
+  }catch(e){}
+})();
+
+/* ---------------- ICONS ---------------- */
+const ICONS = {
+  dashboard:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="12" width="8" height="9" rx="1.5"/><rect x="3" y="14" width="8" height="7" rx="1.5"/></svg>',
+  deals:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="5" height="16" rx="1.2"/><rect x="10" y="4" width="5" height="10" rx="1.2"/><rect x="17" y="4" width="5" height="13" rx="1.2"/></svg>',
+  orders:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2.3" width="6" height="3.4" rx="1"/><line x1="8.5" y1="12" x2="15.5" y2="12"/><line x1="8.5" y1="16" x2="15.5" y2="16"/></svg>',
+  clients:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.4"/><path d="M2.5 20c1-4 3.5-6 6.5-6s5.5 2 6.5 6"/><circle cx="17.5" cy="8.5" r="2.6"/><path d="M15.5 13.2c2.6.2 4.5 2 5.3 5.1"/></svg>',
+  calendar:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="4.5" width="17" height="16" rx="2"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/></svg>',
+  subs:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 0 1 13.6-5.7L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.6 5.7L4 16"/><path d="M4 20v-4h4"/></svg>',
+  b2b:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4h6l1 4H8l1-4Z"/><rect x="4" y="8" width="16" height="12" rx="1.5"/><line x1="9" y1="12" x2="9" y2="16"/><line x1="15" y1="12" x2="15" y2="16"/></svg>',
+  stock:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3.5 7.5 12 3l8.5 4.5-8.5 4.5-8.5-4.5Z"/><path d="M3.5 7.5v9L12 21l8.5-4.5v-9"/><line x1="12" y1="12" x2="12" y2="21"/></svg>',
+  staff:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="3.2"/><path d="M2.2 19.5c.9-3.7 3-5.6 5.8-5.6s4.9 1.9 5.8 5.6"/><circle cx="17" cy="7.5" r="2.4"/><path d="M15.3 13.9c2.4.3 4.1 2 4.8 4.7"/></svg>',
+  tasks:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8.5 12.3 2.2 2.2 4.8-5"/></svg>',
+  analytics:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="20"/><rect x="6" y="12" width="3" height="7"/><rect x="11" y="7" width="3" height="12"/><rect x="16" y="10" width="3" height="9"/></svg>',
+  leads:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 4.5h16L14 12.5v6l-4 2v-8L4 4.5Z"/></svg>',
+  contactcenter:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>',
+  chat:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v10.5H9.5L5 19v-3.5H4V5Z"/></svg>',
+  aiagent:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6L12 3Z"/><path d="M19 15.3l.7 2.2 2.2.7-2.2.7-.7 2.2-.7-2.2-2.2-.7 2.2-.7.7-2.2Z"/></svg>',
+  kb:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5.2c0-.9.8-1.7 2-1.7h6v15.5H6c-1.2 0-2 .5-2 1.5V5.2Z"/><path d="M20 5.2c0-.9-.8-1.7-2-1.7h-6v15.5h6c1.2 0 2 .5 2 1.5V5.2Z"/></svg>',
+  documents:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6.5 3h7l4 4v14h-11V3Z"/><path d="M13.5 3v4h4"/><line x1="9" y1="12.5" x2="15" y2="12.5"/><line x1="9" y1="16" x2="15" y2="16"/></svg>',
+  reports:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2.3" width="6" height="3.4" rx="1"/><rect x="8" y="12.5" width="2.3" height="4.5" fill="currentColor" stroke="none"/><rect x="11.2" y="10" width="2.3" height="7" fill="currentColor" stroke="none"/><rect x="14.4" y="11.5" width="2.3" height="5.5" fill="currentColor" stroke="none"/></svg>',
+  access:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15" r="1.4" fill="currentColor" stroke="none"/></svg>',
+  admin:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.2 19 6v5.5c0 5-3 8-7 9.3-4-1.3-7-4.3-7-9.3V6l7-2.8Z"/><path d="m9.2 12.2 1.9 1.9 3.7-3.9"/></svg>',
+  settings:'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="16.95" y1="16.95" x2="18.72" y2="18.72"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="7.05" y1="16.95" x2="5.28" y2="18.72"/><line x1="5" y1="12" x2="2.5" y2="12"/><line x1="7.05" y1="7.05" x2="5.28" y2="5.28"/><line x1="12" y1="5" x2="12" y2="2.5"/><line x1="16.95" y1="7.05" x2="18.72" y2="5.28"/></svg>',
+  import:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M12 3v11"/><path d="M8 7l4-4 4 4"/><path d="M4 15v3.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V15"/></svg>'
+};
+
+/* ---------------- DATA ---------------- */
+const LS = {
+  get(k,f){try{const v=JSON.parse(localStorage.getItem(k));return v||f;}catch(e){return f;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+};
+const TEAM = [
+  {id:'victoria', name:'Виктория Коротынская', role:'Руководитель компании', spec:'Управление, стратегия, договоры Б2Б', tenure:'в деле с 2019 года', load:74, rating:5.0, orders:'—'},
+  {id:'artur', name:'Артур', role:'Менеджер по работе с клиентами', spec:'Приём заявок, диспетчеризация', tenure:'стаж 3 года', load:88, rating:4.9, orders:126},
+  {id:'tatyana', name:'Татьяна', role:'Оператор-диспетчер', spec:'Заявки, обратная связь после работ', tenure:'стаж 2 года', load:81, rating:4.8, orders:98},
+  {id:'aidar', name:'Айдар', role:'Мастер-сантехник, сварщик', spec:'Сантехника любой сложности, сварка металла и полипропилена', tenure:'стаж 15 лет', load:94, rating:5.0, orders:57},
+  {id:'stepan', name:'Степан', role:'Электрик, мастер на час', spec:'Электрика + мелкие отделочные работы', tenure:'стаж 7 лет', load:76, rating:4.9, orders:41},
+  {id:'maksim', name:'Максим', role:'Мастер на час', spec:'Сборка мебели, мелкий бытовой ремонт', tenure:'стаж 5 лет', load:69, rating:4.8, orders:33},
+  {id:'vitaliy', name:'Виталий', role:'Мастер на час', spec:'Сборка мебели, мелкий бытовой ремонт', tenure:'стаж 5 лет', load:64, rating:4.9, orders:29},
+];
+
+const B2C_STAGES = ['Новая заявка','Диагностика назначена','Диагностика проведена','Предложение отправлено','Согласовано','В работе','Завершено'];
+const B2C_DEALS = [
+  {id:'d1', name:'Ирина Соколова', addr:'Красный Путь, 26 – 44', note:'Засор в ванной', price:'1 199 ₽', stage:0},
+  {id:'d2', name:'Дмитрий Панов', addr:'ул. Химиков, 15 – 9', note:'Не греет полотенцесушитель', price:'от 899 ₽', stage:0},
+  {id:'d3', name:'Ольга Бахтина', addr:'70 лет Октября, 9 – 61', note:'Течь под мойкой, визит завтра 11:00', price:'диагностика', stage:1},
+  {id:'d4', name:'Сергей Крылов', addr:'Волочаевская, 12 – 3', note:'Акт диагностики передан клиенту', price:'—', stage:2},
+  {id:'d5', name:'Наталья Ким', addr:'пр. Мира, 42 – 12', note:'Предложена подписка «Под контролем»', price:'1 999 ₽/мес', stage:3},
+  {id:'d6', name:'Виктор Дегтярёв', addr:'Б. Хмельницкого, 118 – 5', note:'Замена стояка ХВС, предоплата получена', price:'6 400 ₽', stage:4},
+  {id:'d7', name:'Елена Гаврилова', addr:'4-я Челюскинцев, 3 – 17', note:'Электромонтаж, мастер Степан, срок сегодня 18:00', price:'2 850 ₽', stage:5},
+  {id:'d8', name:'Людмила Сотникова', addr:'Заводская, 7 – 2', note:'Замена счётчика воды, акт подписан', price:'1 450 ₽', stage:6},
+];
+const B2B_STAGES = ['Лид','КП отправлено','Договор на подпись','Действует','На продлении'];
+const B2B_DEALS = [
+  {id:'e1', name:'ТСЖ «Иртышский берег»', addr:'1 дом, интерес к АДС', note:'Первый звонок принял Артур', price:'—', stage:0},
+  {id:'e2', name:'УК «ЖилСервис-Кировский»', addr:'8 домов', note:'КП на аварийно-диспетчерское обслуживание', price:'≈ 96 000 ₽/мес', stage:1},
+  {id:'e3', name:'ТСЖ «Энергетик-5»', addr:'1 дом', note:'Условия SLA согласованы, ждём подписи', price:'14 500 ₽/мес', stage:2},
+  {id:'e4', name:'УК «Комфорт-Омск»', addr:'14 домов', note:'Будни 17:00–08:00, выходные — круглосуточно', price:'118 000 ₽/мес', stage:3},
+  {id:'e5', name:'ТСЖ «Зелёная роща»', addr:'1 дом', note:'Договор истекает через 12 дней', price:'12 000 ₽/мес', stage:4},
+];
+
+const ORDERS = [
+  {id:'2481', client:'Дмитрий Панов', addr:'ул. Химиков, 15 – 9', service:'Нет света в комнате', type:'emg', master:'Степан', status:'В пути', when:'SLA: 42 мин', sev:'crit'},
+  {id:'2480', client:'Ирина Соколова', addr:'Красный Путь, 26 – 44', service:'Прочистка засора ванны', type:'plan', master:'Айдар', status:'Назначен', when:'Сегодня 15:30', sev:'info'},
+  {id:'2479', client:'УК «Комфорт-Омск»', addr:'ул. Мира, 101 (стояк ХВС)', service:'Замена стояка холодной воды', type:'emg', master:'Айдар', status:'Выполняется', when:'SLA: 1 ч 10 мин', sev:'crit'},
+  {id:'2478', client:'Елена Гаврилова', addr:'4-я Челюскинцев, 3 – 17', service:'Электромонтаж: розетки, люстра', type:'plan', master:'Степан', status:'Выполняется', when:'Сегодня 18:00', sev:'info'},
+  {id:'2477', client:'Сергей Крылов', addr:'Волочаевская, 12 – 3', service:'Диагностика сантехники', type:'diag', master:'Артур → Айдар', status:'Акт готов', when:'Завершено вчера', sev:'good'},
+  {id:'2476', client:'Людмила Сотникова', addr:'Заводская, 7 – 2', service:'Замена счётчика воды', type:'plan', master:'Максим', status:'Завершено', when:'Завершено вчера', sev:'good'},
+  {id:'2475', client:'Наталья Ким', addr:'пр. Мира, 42 – 12', service:'Диагностика перед подпиской', type:'diag', master:'Виталий', status:'Акт готов', when:'Завершено 2 дня назад', sev:'good'},
+];
+
+const CLIENTS = [
+  {id:'c1', name:'Ирина Соколова', type:'Частный клиент', addr:'Красный Путь, 26 – 44', orders:3, sub:'Нет подписки', phone:'+7 913 ХХХ-ХХ-01',
+    devices:'Счётчики ХВС/ГВС — поверка 03.2027', history:[['12.09.2026','Прочистка засора ванны','1 199 ₽'],['02.06.2026','Замена смесителя на кухне','899 ₽'],['28.01.2025','Диагностика инженерных сетей','бесплатно']]},
+  {id:'c2', name:'Наталья Ким', type:'Частный клиент', addr:'пр. Мира, 42 – 12', orders:1, sub:'Оформляется «Под контролем»', phone:'+7 913 ХХХ-ХХ-02',
+    devices:'Счётчик ГВС — истекает поверка через 4 мес.', history:[['10.09.2026','Диагностика перед подпиской','бесплатно']]},
+  {id:'c3', name:'Виктор Дегтярёв', type:'Частный клиент', addr:'Б. Хмельницкого, 118 – 5', orders:9, sub:'«Без проблем» до 14.03.2027', phone:'+7 913 ХХХ-ХХ-03',
+    devices:'Полный техпаспорт объекта в архиве, стояки заменены 2024', history:[['13.09.2026','Замена стояка ХВС','6 400 ₽'],['05.05.2026','Плановый осмотр по подписке','в тариф'],['11.01.2026','Мастер на час: сборка мебели','1 100 ₽']]},
+  {id:'c4', name:'Людмила Сотникова', type:'Частный клиент', addr:'Заводская, 7 – 2', orders:5, sub:'Нет подписки', phone:'+7 913 ХХХ-ХХ-04',
+    devices:'Счётчик воды заменён 12.09.2026', history:[['12.09.2026','Замена счётчика воды','1 450 ₽'],['20.03.2025','Ремонт полотенцесушителя','2 300 ₽']]},
+  {id:'c5', name:'УК «Комфорт-Омск»', type:'Управляющая компания', addr:'14 многоквартирных домов', orders:214, sub:'Договор АДС до 30.11.2026', phone:'диспетчер УК',
+    devices:'Реестр стояков и запорной арматуры по каждому дому — в приложении к договору', history:[['13.09.2026','Замена стояка ХВС, ул. Мира 101','по договору'],['02.09.2026','Аварийная течь кровли, ул. Волгоградская 4','по договору']]},
+  {id:'c6', name:'ТСЖ «Зелёная роща»', type:'ТСЖ', addr:'ул. Заозёрная, 9', orders:18, sub:'Договор истекает 26.09.2026', phone:'председатель ТСЖ',
+    devices:'1 дом, узел учёта тепла — поверка пройдена', history:[['30.08.2026','Аварийный вызов: прорыв отопления','по договору']]},
+];
+
+const CAL_EVENTS = [
+  {master:'Айдар', day:0, time:'10:00–11:30', title:'Сотникова — замена счётчика', type:'done'},
+  {master:'Айдар', day:1, time:'14:00–16:00', title:'УК «Комфорт-Омск» — стояк ХВС', type:'emg'},
+  {master:'Айдар', day:3, time:'09:30–10:30', title:'Диагностика, Крылов С.', type:'diag'},
+  {master:'Степан', day:0, time:'17:00–18:30', title:'Авария — Панов Д.', type:'emg'},
+  {master:'Степан', day:2, time:'11:00–13:00', title:'Гаврилова — электромонтаж', type:'plan'},
+  {master:'Степан', day:4, time:'15:00–16:00', title:'Розетки, ул. Дианова', type:'plan'},
+  {master:'Максим', day:3, time:'10:00–11:00', title:'Ким Н. — сборка мебели', type:'plan'},
+  {master:'Максим', day:5, time:'12:00–13:00', title:'Полки, ул. Волочаевская', type:'plan'},
+  {master:'Виталий', day:1, time:'13:00–14:00', title:'Регулировка дверей', type:'plan'},
+  {master:'Виталий', day:4, time:'16:30–17:30', title:'Диагностика, подписка «Выручай»', type:'diag'},
+];
+
+const SUB_TIERS = [
+  {name:'«Выручай»', price:1199, count:34},
+  {name:'«Под контролем»', price:1999, count:21},
+  {name:'«Без проблем»', price:4999, count:9},
+];
+const SUBSCRIBERS = [
+  {name:'Виктор Дегтярёв', tier:'«Без проблем»', addr:'Б. Хмельницкого, 118', since:'14.03.2025', renew:'14.03.2027', status:'good'},
+  {name:'Городской ЖК «Атлант» (частный домовладелец)', tier:'«Под контролем»', addr:'ул. Багратиона, 55', since:'02.11.2025', renew:'02.11.2026', status:'good'},
+  {name:'Наталья Ким', tier:'«Под контролем»', addr:'пр. Мира, 42', since:'—', renew:'оформление', status:'warn'},
+  {name:'Семья Ерохиных', tier:'«Выручай»', addr:'ул. Красный Путь, 100', since:'20.01.2026', renew:'20.10.2026', status:'good'},
+  {name:'Ольга Марченко', tier:'«Выручай»', addr:'ул. Багратиона, 12', since:'05.06.2025', renew:'05.10.2026', status:'warn'},
+];
+
+const B2B_CONTRACTS = [
+  {name:'УК «Комфорт-Омск»', houses:14, sla:'Будни 17:00–08:00 · выходные 24/7', until:'30.11.2026', status:'good'},
+  {name:'ТСЖ «Зелёная роща»', houses:1, sla:'Будни 17:00–08:00 · выходные 24/7', until:'26.09.2026', status:'warn'},
+  {name:'УК «ЖилСервис-Кировский»', houses:8, sla:'На согласовании', until:'—', status:'info'},
+  {name:'ТСЖ «Энергетик-5»', houses:1, sla:'Будни 17:00–08:00 · выходные 24/7', until:'ждёт подписи', status:'info'},
+];
+
+const STOCK = [
+  {name:'Смесители (Ремлюкс)', qty:'12 шт', min:5, status:'good'},
+  {name:'Радиаторы биметалл (Радиат)', qty:'4 шт', min:6, status:'crit'},
+  {name:'Трубы PPR 20мм (Русклимат)', qty:'86 м', min:30, status:'good'},
+  {name:'Счётчики воды', qty:'7 шт', min:10, status:'warn'},
+  {name:'Автоматы 16А', qty:'22 шт', min:10, status:'good'},
+  {name:'Гофра/фитинги канализация', qty:'31 шт', min:15, status:'good'},
+];
+const TOOLS = [
+  {who:'Айдар', what:'Сварочный аппарат ПП + набор сантехника', since:'выдано 03.2024'},
+  {who:'Степан', what:'Набор электрика + перфоратор', since:'выдано 06.2024'},
+  {who:'Максим', what:'Набор мастера на час + шуруповёрт', since:'выдано 01.2025'},
+  {who:'Виталий', what:'Набор мастера на час + шуруповёрт', since:'выдано 01.2025'},
+];
+const SUPPLIERS = [
+  {name:'Радиат', cat:'Радиаторы, отопление', disc:'скидка 12%'},
+  {name:'Русклимат', cat:'Трубы, фитинги, полипропилен', disc:'скидка 15%'},
+  {name:'Ремлюкс', cat:'Сантехника, смесители', disc:'скидка 10%'},
+];
+
+const LEADS = [
+  {id:'l1', chan:'tg', chanLabel:'Telegram', name:'@user_1923 (аноним)', text:'Нужна замена смесителя, сколько стоит?', status:'new', owner:'не назначен', when:'5 мин назад'},
+  {id:'l2', chan:'wa', chanLabel:'WhatsApp', name:'+7 913 ХХХ-ХХ-77', text:'Не работает розетка на кухне', status:'progress', owner:'Татьяна', when:'20 мин назад'},
+  {id:'l3', chan:'avito', chanLabel:'Авито', name:'Отклик на объявление «Ремонт сантехники»', text:'Здравствуйте, актуально? Нужен сантехник завтра', status:'new', owner:'не назначен', when:'40 мин назад'},
+  {id:'l4', chan:'ig', chanLabel:'Instagram', name:'@oksana.omsk', text:'Подскажите цену на подписку «Под контролем»', status:'qualified', owner:'Артур', when:'1 ч назад'},
+  {id:'l5', chan:'email', chanLabel:'Email', name:'Ольга П. — info@vikahelp.ru', text:'Заявка с сайта: нужна диагностика инженерных сетей', status:'new', owner:'не назначен', when:'2 ч назад'},
+  {id:'l6', chan:'site', chanLabel:'Сайт', name:'Гость (виджет обратного звонка)', text:'Перезвоните, пожалуйста, по поводу течи', status:'progress', owner:'Татьяна', when:'вчера'},
+];
+
+const CHANNELS = [
+  {id:'tg', name:'Telegram', cls:'chan-tg', ico:'TG', status:'good', desc:'Бот приёма заявок @vikaviruchaybot', stat:'62 сообщения / нед.'},
+  {id:'wa', name:'WhatsApp', cls:'chan-wa', ico:'WA', status:'good', desc:'Business-номер +7 923 046-40-49', stat:'48 сообщений / нед.'},
+  {id:'ig', name:'Instagram', cls:'chan-ig', ico:'IG', status:'good', desc:'Direct-сообщения @vikahelp.ru', stat:'19 сообщений / нед.'},
+  {id:'avito', name:'Авито', cls:'chan-avito', ico:'AV', status:'warn', desc:'Отклики на объявления об услугах', stat:'нужна повторная авторизация'},
+  {id:'email', name:'Email', cls:'chan-email', ico:'@', status:'good', desc:'info@vikahelp.ru — заявки с форм', stat:'11 писем / нед.'},
+  {id:'site', name:'Сайт vikahelp.ru', cls:'chan-site', ico:'W', status:'good', desc:'Форма заявки и виджет обратного звонка', stat:'27 заявок / нед.'},
+];
+
+const CHAT_THREADS = [
+  {id:'ch1', chan:'tg', name:'Дмитрий Панов', preview:'Спасибо, ждём мастера', unread:0,
+    msgs:[
+      {dir:'in', text:'Здравствуйте! Не греет полотенцесушитель, можно мастера сегодня?', time:'12:04'},
+      {dir:'bot', text:'Здравствуйте! Уточните, пожалуйста, адрес и удобное время визита — предложим ближайший слот.', time:'12:04'},
+      {dir:'in', text:'ул. Химиков, 15-9, лучше вечером', time:'12:06'},
+      {dir:'out', text:'Записали на сегодня 18:00, мастер Степан. Диагностика бесплатная.', time:'12:09'},
+      {dir:'in', text:'Спасибо, ждём мастера', time:'12:10'},
+    ]},
+  {id:'ch2', chan:'wa', name:'Ирина Соколова', preview:'Хорошо, буду дома', unread:2,
+    msgs:[
+      {dir:'in', text:'Добрый день! Опять засорилась ванна(', time:'09:15'},
+      {dir:'out', text:'Добрый день, Ирина! Оформили заявку, мастер Айдар подъедет сегодня к 15:30.', time:'09:20'},
+      {dir:'in', text:'Хорошо, буду дома', time:'09:21'},
+    ]},
+  {id:'ch3', chan:'ig', name:'oksana.omsk', preview:'А что входит в тариф «Под контролем»?', unread:1,
+    msgs:[
+      {dir:'in', text:'Здравствуйте, подскажите цену на подписку', time:'вчера'},
+      {dir:'bot', text:'Здравствуйте! У нас три тарифа: «Выручай» 1199₽, «Под контролем» 1999₽, «Без проблем» 4999₽ в месяц. Какой вас интересует?', time:'вчера'},
+      {dir:'in', text:'А что входит в тариф «Под контролем»?', time:'вчера'},
+    ]},
+  {id:'ch4', chan:'avito', name:'Отклик на объявление', preview:'Нужен сантехник завтра', unread:1,
+    msgs:[{dir:'in', text:'Здравствуйте, актуально? Нужен сантехник завтра с утра', time:'40 мин назад'}]},
+  {id:'ch5', chan:'email', name:'Ольга П.', preview:'Заявка с сайта: диагностика', unread:0,
+    msgs:[{dir:'in', text:'Добрый день, оставляла заявку на сайте на бесплатную диагностику, подскажите когда ждать звонка?', time:'2 ч назад'},
+          {dir:'out', text:'Ольга, добрый день! Оператор свяжется с вами в течение часа для согласования времени.', time:'1 ч 40 мин назад'}]},
+];
+
+const AI_SKILLS = [
+  {name:'Квалификация лида (уточнить адрес, проблему, срочность)', on:true},
+  {name:'Запись на бесплатную диагностику', on:true},
+  {name:'Ответы по прайсу и FAQ из базы знаний', on:true},
+  {name:'Консультация по тарифам подписки', on:true},
+  {name:'Оформление подписки (сбор данных для менеджера)', on:false},
+  {name:'Немедленная эскалация аварийных обращений оператору', on:true},
+];
+const AI_CHANNELS = [
+  {name:'Telegram', on:true}, {name:'WhatsApp', on:true}, {name:'Сайт (виджет)', on:true},
+  {name:'Instagram', on:true}, {name:'Авито', on:false}, {name:'Email', on:false},
+];
+
+const KB_ARTICLES = [
+  {title:'Прайс-лист: сантехника, электрика, мастер на час', cat:'Услуги и цены', updated:'10.09.2026', used:true},
+  {title:'Скрипт диспетчера: приём аварийной заявки', cat:'Скрипты', updated:'02.09.2026', used:true},
+  {title:'Регламент SLA для УК/ТСЖ (17:00–08:00, выходные 24/7)', cat:'Регламенты', updated:'28.08.2026', used:true},
+  {title:'FAQ: почему подписка выгоднее разового вызова', cat:'FAQ', updated:'15.08.2026', used:true},
+  {title:'Условия рассрочки и сервиса «Долями»', cat:'FAQ', updated:'15.08.2026', used:true},
+  {title:'Поставщики: Радиат, Русклимат, Ремлюкс — условия и скидки', cat:'Снабжение', updated:'01.08.2026', used:true},
+  {title:'Регламент общения с клиентом (тон, скорость ответа)', cat:'Скрипты', updated:'20.07.2026', used:true},
+  {title:'Договор оферты и политика конфиденциальности', cat:'Регламенты', updated:'01.06.2026', used:false},
+];
+
+const IMPORT_CATEGORIES = [
+  {id:'clients', label:'Клиенты', desc:'Частные лица и объекты обслуживания', fields:'ФИО, телефон, адрес, тип объекта, статус подписки'},
+  {id:'suppliers', label:'Поставщики', desc:'Компании-поставщики материалов', fields:'Название, категория, контакт, условия, скидка'},
+  {id:'orgs', label:'Компании', desc:'Контрагенты и партнёры', fields:'Название, ИНН, адрес, контактное лицо, телефон'},
+  {id:'hoa', label:'ТСЖ', desc:'Товарищества собственников жилья', fields:'Название, адрес дома, председатель, телефон'},
+  {id:'mc', label:'Управляющие компании', desc:'УК на аварийном обслуживании', fields:'Название, кол-во домов, SLA, срок договора'},
+  {id:'staff', label:'Сотрудники', desc:'Мастера и офисный персонал', fields:'ФИО, роль, специализация, стаж, телефон'},
+];
+
+const REPORT_TEMPLATES = {
+  leads:{ label:'Лиды',
+    metrics:[{label:'Всего лидов', type:'count', perDay:14},{label:'Конверсия в сделку', type:'percent', value:38},{label:'Среднее время ответа', type:'text', value:'6 мин'},{label:'Доля из мессенджеров', type:'percent', value:73}],
+    breakdownTitle:'Лиды по каналам, %', breakdown:[{label:'Telegram',value:32},{label:'WhatsApp',value:26},{label:'Сайт',value:18},{label:'Instagram',value:12},{label:'Авито',value:8},{label:'Email',value:4}],
+    defs:['Всего лидов — обращения из Telegram, WhatsApp, Instagram, Авито, Email и сайта за период.','Конверсия в сделку — доля лидов, доведённых до статуса «Квалифицирован» и переданных в воронку.','Доля из мессенджеров — противопоставлена звонкам и обращениям через сайт.'],
+    recs:['Канал Авито помечен «требует внимания» в Контакт-центре — переподключите интеграцию, иначе теряются лиды.','ИИ-агент держит среднее время ответа на 6 минутах — не отключайте автоответ в нерабочее время.','Instagram даёт больше всего лидов на подписку — стоит увеличить бюджет на этот канал.']},
+  deals:{ label:'Сделки',
+    metrics:[{label:'Новых сделок', type:'count', perDay:3.6},{label:'Конверсия в оплату', type:'percent', value:44},{label:'Средний чек', type:'text', value:'2 140 ₽'},{label:'Выручка по сделкам', type:'currency', perDay:38400}],
+    breakdownTitle:'Воронка «Заявка → Оплата», %', breakdown:[{label:'Заявка',value:100},{label:'Диагностика',value:78},{label:'Предложение',value:61},{label:'Оплата',value:44}],
+    defs:['Конверсия в оплату считается от первого касания (заявки) до оплаченного наряда.','Средний чек — среднее по разовым (не подписочным) работам за период.'],
+    recs:['Просадка между «Предложение» и «Оплата» (61%→44%) — проверьте скорость связи с клиентом после диагностики.','Рассмотрите скрипт с фиксацией даты визита прямо на диагностике, чтобы сократить потери на этом шаге.']},
+  orders:{ label:'Наряды',
+    metrics:[{label:'Нарядов выполнено', type:'count', perDay:6.1},{label:'Доля аварийных', type:'percent', value:22},{label:'Закрыто с актом', type:'percent', value:96},{label:'В рамках SLA', type:'percent', value:91}],
+    breakdownTitle:'Наряды по мастерам, %', breakdown:[{label:'Айдар',value:34},{label:'Степан',value:27},{label:'Максим',value:21},{label:'Виталий',value:18}],
+    defs:['«В рамках SLA» — доля аварийных заявок, закрытых в норматив 17:00–08:00 по будням и круглосуточно в выходные.'],
+    recs:['9% аварийных нарядов выходят за SLA — основная причина в логе: ожидание материала со склада (см. «Склад»).','Загрузка Айдара выше нормы (94%) — рассмотрите передачу части плановых сантехнических работ Степану.']},
+  clients:{ label:'Клиенты',
+    metrics:[{label:'Новых клиентов', type:'count', perDay:0.6},{label:'Повторные обращения', type:'percent', value:47},{label:'Средне заявок на клиента', type:'text', value:'4.2'},{label:'Объектов Б2Б на обслуживании', type:'text', value:'23 дома'}],
+    breakdownTitle:'Клиенты по типу, %', breakdown:[{label:'Частные лица',value:78},{label:'УК',value:16},{label:'ТСЖ',value:6}],
+    defs:['Повторные обращения — доля клиентов с более чем одной оплаченной заявкой за всё время.'],
+    recs:['Доля повторных обращений (47%) — хороший показатель для сегмента, но ниже, чем у клиентов с подпиской (100%). Предлагайте подписку при 2-м обращении.']},
+  subs:{ label:'Подписки',
+    metrics:[{label:'Активных подписчиков', type:'text', value:'64'},{label:'MRR', type:'text', value:'127 736 ₽'},{label:'Отток за месяц', type:'percent', value:4.7},{label:'Новых подписок', type:'count', perDay:0.5}],
+    breakdownTitle:'Подписчики по тарифу, %', breakdown:[{label:'«Выручай»',value:53},{label:'«Под контролем»',value:33},{label:'«Без проблем»',value:14}],
+    defs:['MRR — ежемесячный регулярный доход от активных подписок.','Отток — доля подписчиков, отменивших подписку за последний месяц.'],
+    recs:['Тариф «Без проблем» даёт больше всего выручки на клиента — предлагайте апгрейд активным подписчикам «Выручай» после 3 визитов подряд.']},
+  b2b:{ label:'Договоры Б2Б',
+    metrics:[{label:'Активных договоров', type:'text', value:'4'},{label:'Выручка Б2Б', type:'text', value:'214 500 ₽/мес'},{label:'Домов на обслуживании', type:'text', value:'23'},{label:'Истекает в этом месяце', type:'text', value:'1'}],
+    breakdownTitle:'Выручка по контрагентам, %', breakdown:[{label:'УК «Комфорт-Омск»',value:55},{label:'ТСЖ «Зелёная роща»',value:6},{label:'УК «ЖилСервис-Кировский»',value:'на подписании'},{label:'ТСЖ «Энергетик-5»',value:'ждёт подписи'}],
+    defs:['В расчёт выручки Б2Б идут только действующие договоры АДС.'],
+    recs:['Договор ТСЖ «Зелёная роща» истекает 26.09.2026 — направьте предложение о продлении на этой неделе.','УК «ЖилСервис-Кировский» (8 домов) — крупная сделка в пайплайне, приоритизируйте согласование КП.']},
+  stock:{ label:'Склад',
+    metrics:[{label:'Позиций ниже минимума', type:'text', value:'2'},{label:'Инструмента выдано', type:'text', value:'4 комплекта'},{label:'Средняя скидка поставщиков', type:'text', value:'12%'},{label:'Оценка стоимости остатков', type:'text', value:'≈ 184 000 ₽'}],
+    breakdownTitle:'Остатки по категориям, %', breakdown:[{label:'Сантехника',value:38},{label:'Отопление',value:24},{label:'Трубы/фитинги',value:22},{label:'Электрика',value:16}],
+    defs:['«Позиций ниже минимума» — материалы, чей остаток меньше установленного порога заказа.'],
+    recs:['Радиаторы биметалл ниже минимума (4 из 6) — оформите закупку у «Радиат» до конца недели, иначе есть риск срыва SLA по отоплению.']},
+  staff:{ label:'Сотрудники',
+    metrics:[{label:'Средняя загрузка', type:'percent', value:78},{label:'Средний рейтинг', type:'text', value:'4.87'},{label:'Нарядов на мастера / нед.', type:'text', value:'~9.3'},{label:'Лучший показатель', type:'text', value:'Айдар, 5.0★'}],
+    breakdownTitle:'Загрузка по сотрудникам, %', breakdown:[{label:'Айдар',value:94},{label:'Артур',value:88},{label:'Татьяна',value:81},{label:'Степан',value:76},{label:'Виктория',value:74},{label:'Максим',value:69},{label:'Виталий',value:64}],
+    defs:['Загрузка — доля рабочего времени, занятого нарядами и обращениями, от нормы за период.'],
+    recs:['Айдар и Артур загружены выше 85% — риск выгорания при росте потока; рассмотрите найм второго сантехника.']},
+  tasks:{ label:'Задачи',
+    metrics:[{label:'Открытых задач', type:'text', value:'5'},{label:'Выполнено за период', type:'count', perDay:0.9},{label:'Просрочено', type:'text', value:'0'},{label:'Среднее время выполнения', type:'text', value:'1.4 дня'}],
+    breakdownTitle:'Задачи по исполнителям, %', breakdown:[{label:'Артур',value:30},{label:'Айдар',value:20},{label:'Виктория',value:20},{label:'Татьяна',value:15},{label:'Степан',value:15}],
+    defs:['Просроченные — задачи с истёкшим сроком и статусом не «Готово».'],
+    recs:['Просрочек нет — хороший темп. Держите нагрузку на Артура под контролем, у него больше всего открытых задач.']},
+  revenue:{ label:'Выручка (сводно)',
+    metrics:[{label:'Общая выручка', type:'currency', perDay:49874},{label:'Доля разовых работ', type:'percent', value:77},{label:'Доля подписок', type:'percent', value:9},{label:'Доля Б2Б', type:'percent', value:14}],
+    breakdownTitle:'Выручка по направлениям, %', breakdown:[{label:'Разовые работы',value:77},{label:'Договоры Б2Б',value:14},{label:'Подписки',value:9}],
+    defs:['Доли направлений считаются от общей выручки за выбранный период по всем каналам оплаты.'],
+    recs:['Подписки дают всего 9% выручки при 64 активных клиентах — это точка роста: предлагайте подписку каждому клиенту с 2+ заявками.','Доля Б2Б стабильна — сфокусируйтесь на удержании текущих договоров и допродаже новых домов действующим УК.']},
+};
+
+const PERM_MODULES = [
+  {id:'dashboard', label:'Дашборд'}, {id:'leads', label:'Лиды'}, {id:'deals', label:'Сделки'}, {id:'orders', label:'Наряды'},
+  {id:'documents', label:'Документы'}, {id:'clients', label:'Клиенты'}, {id:'calendar', label:'Календарь'}, {id:'subs', label:'Подписки'},
+  {id:'b2b', label:'Договоры Б2Б'}, {id:'contactcenter', label:'Контакт-центр'}, {id:'chat', label:'Чат'}, {id:'aiagent', label:'ИИ-агент'},
+  {id:'kb', label:'База знаний'}, {id:'stock', label:'Склад'}, {id:'staff', label:'Сотрудники'}, {id:'tasks', label:'Задачи'},
+  {id:'import', label:'Импорт данных'}, {id:'analytics', label:'Аналитика'}, {id:'reports', label:'Мастер отчётов'},
+  {id:'access', label:'Доступы'}, {id:'admin', label:'Админ-панель'}, {id:'settings', label:'Настройки'},
+];
+const ROLES = ['Руководитель','Диспетчер','Мастер','Бухгалтер'];
+function roleDefaultLevel(role, id){
+  if(role==='Руководитель') return 'full';
+  if(role==='Диспетчер') return ['leads','deals','orders','clients','calendar','chat','contactcenter','subs','tasks','documents'].includes(id) ? 'edit' : ['analytics','reports','stock','staff','kb','b2b','aiagent'].includes(id) ? 'view' : 'none';
+  if(role==='Мастер') return ['orders','calendar','tasks'].includes(id) ? 'edit' : ['clients','kb'].includes(id) ? 'view' : 'none';
+  if(role==='Бухгалтер') return ['documents','subs','b2b'].includes(id) ? 'edit' : ['clients','orders','analytics','reports','stock'].includes(id) ? 'view' : 'none';
+  return 'none';
+}
+let PERMISSIONS = LS.get('vika_permissions', (()=>{
+  const p={};
+  ROLES.forEach(r=>{ p[r]={}; PERM_MODULES.forEach(m=>{ p[r][m.id]=roleDefaultLevel(r,m.id); }); });
+  return p;
+})());
+
+let USERS = LS.get('vika_users', [
+  {id:'victoria', name:'Виктория Коротынская', email:'victoria@vikahelp.ru', role:'Руководитель', status:'active'},
+  {id:'artur', name:'Артур', email:'artur@vikahelp.ru', role:'Диспетчер', status:'active'},
+  {id:'tatyana', name:'Татьяна', email:'tatyana@vikahelp.ru', role:'Диспетчер', status:'active'},
+  {id:'aidar', name:'Айдар', email:'aidar@vikahelp.ru', role:'Мастер', status:'active'},
+  {id:'stepan', name:'Степан', email:'stepan@vikahelp.ru', role:'Мастер', status:'active'},
+  {id:'maksim', name:'Максим', email:'maksim@vikahelp.ru', role:'Мастер', status:'active'},
+  {id:'vitaliy', name:'Виталий', email:'vitaliy@vikahelp.ru', role:'Мастер', status:'active'},
+]);
+let INVITES = LS.get('vika_invites', []);
+let AUDIT_LOG = LS.get('vika_audit', [
+  {when:'вчера, 18:20', who:'Виктория Коротынская', text:'изменила роль сотрудника Татьяна: Оператор → Диспетчер'},
+  {when:'3 дня назад', who:'Виктория Коротынская', text:'выдала доступ «Документы» роли Бухгалтер'},
+]);
+
+let TASKS = [
+  {id:'t1', who:'Артур', txt:'Позвонить 3 клиентам с назначенной диагностикой', col:'today', done:false},
+  {id:'t2', who:'Айдар', txt:'Подготовить акт по УК «Комфорт-Омск», стояк ХВС', col:'today', done:false},
+  {id:'t3', who:'Виктория', txt:'Проверить SLA по аварийной заявке №2481', col:'today', done:false},
+  {id:'t4', who:'Степан', txt:'Забрать перфоратор со склада', col:'week', done:false},
+  {id:'t5', who:'Татьяна', txt:'Обзвон подписчиков с истекающей подпиской', col:'week', done:false},
+  {id:'t6', who:'Виктория', txt:'Подписать договор с ТСЖ «Энергетик-5»', col:'week', done:false},
+  {id:'t7', who:'Максим', txt:'Наряд №2476 закрыт — прикрепить акт', col:'done', done:true},
+  {id:'t8', who:'Артур', txt:'Обновить прайс на сайте после закупки Русклимат', col:'done', done:true},
+];
+
+/* ---------------- STATE / STORAGE ---------------- */
+let dealStagesB2C = LS.get('vika_b2c_stages', Object.fromEntries(B2C_DEALS.map(d=>[d.id,d.stage])));
+let dealStagesB2B = LS.get('vika_b2b_stages', Object.fromEntries(B2B_DEALS.map(d=>[d.id,d.stage])));
+let taskState = LS.get('vika_tasks', Object.fromEntries(TASKS.map(t=>[t.id,{col:t.col,done:t.done}])));
+
+let COMPANY = LS.get('vika_company', {
+  name:'«Вика-выручай» (уточните полное юр. название)',
+  inn:'________________', ogrn:'________________',
+  addr:'г. Омск, ул. 4-я Енисейская, 21', phone:'+7 (3812) 29-39-79',
+  bank:'наименование банка', rs:'40702810_____________', ks:'30101810_____________', bik:'045209___'
+});
+let DOC_ASSETS = LS.get('vika_doc_assets', {stamp:null, signature:null});
+let DOC_LOG = LS.get('vika_doc_log', [
+  {id:'108', type:'Акт выполненных работ', client:'Виктор Дегтярёв', date:'13.09.2026', amount:'6 400 ₽', status:'good'},
+  {id:'107', type:'Счёт на оплату', client:'УК «Комфорт-Омск»', date:'10.09.2026', amount:'118 000 ₽', status:'good'},
+  {id:'106', type:'Накладная ТОРГ-12', client:'Русклимат (поставщик)', date:'05.09.2026', amount:'23 400 ₽', status:'good'},
+]);
+let docCounter = LS.get('vika_doc_counter', 108);
+let docItems = [{name:'', qty:1, unit:'шт', price:0}];
+
+/* ---------------- NAV ---------------- */
+const VIEWS = [
+  {id:'dashboard', label:'Дашборд', sub:'Обзор за сегодня', group:'Продажи'},
+  {id:'leads', label:'Лиды', sub:'Входящие обращения из всех каналов', group:'Продажи', badge:3},
+  {id:'deals', label:'Сделки', sub:'Воронки: частные клиенты и Б2Б', group:'Продажи'},
+  {id:'orders', label:'Наряды', sub:'Диспетчеризация мастеров', group:'Продажи', badge:2},
+  {id:'documents', label:'Документы', sub:'Счета, акты, накладные с печатью и подписью', group:'Продажи'},
+  {id:'clients', label:'Клиенты', sub:'Объекты, история, документы', group:'Продажи'},
+  {id:'calendar', label:'Календарь', sub:'Расписание мастеров по неделе', group:'Продажи'},
+  {id:'subs', label:'Подписки', sub:'Тарифы и активные абонементы', group:'Продажи'},
+  {id:'b2b', label:'Договоры Б2Б', sub:'УК и ТСЖ на аварийном обслуживании', group:'Продажи'},
+  {id:'contactcenter', label:'Контакт-центр', sub:'Подключённые каналы и интеграции', group:'Коммуникации'},
+  {id:'chat', label:'Чат', sub:'Все переписки в одном окне', group:'Коммуникации', badge:4},
+  {id:'aiagent', label:'ИИ-агент', sub:'Автоответы и сценарии на нейросети', group:'Коммуникации'},
+  {id:'kb', label:'База знаний', sub:'Материалы для клиентов и ИИ-агента', group:'Коммуникации'},
+  {id:'stock', label:'Склад', sub:'Материалы, инструмент, поставщики', group:'Операции'},
+  {id:'staff', label:'Сотрудники', sub:'Загрузка и специализация команды', group:'Операции'},
+  {id:'tasks', label:'Задачи', sub:'Постановка и контроль поручений', group:'Операции'},
+  {id:'import', label:'Импорт данных', sub:'Массовая загрузка баз Excel/CSV', group:'Операции'},
+  {id:'analytics', label:'Аналитика', sub:'Выручка, конверсия, сервис', group:'Аналитика'},
+  {id:'reports', label:'Мастер отчётов', sub:'Отчёты по любым разделам CRM за любой период', group:'Аналитика'},
+  {id:'access', label:'Доступы', sub:'Права ролей на разделы и данные', group:'Управление'},
+  {id:'admin', label:'Админ-панель', sub:'Сотрудники, приглашения, учётные записи', group:'Управление'},
+  {id:'settings', label:'Настройки', sub:'Параметры компании и CRM', group:'Управление'},
+];
+const navEl = document.getElementById('nav');
+let lastNavGroup=null;
+VIEWS.forEach(v=>{
+  if(v.group!==lastNavGroup){
+    const g=document.createElement('div'); g.className='nav-group-label'; g.textContent=v.group; navEl.appendChild(g);
+    lastNavGroup=v.group;
+  }
+  const b=document.createElement('button');
+  b.className='nav-btn'+(v.id==='dashboard'?' active':'');
+  b.dataset.view=v.id;
+  b.innerHTML = ICONS[v.id] + '<span>'+v.label+'</span>' + (v.badge?'<span class="nav-badge">'+v.badge+'</span>':'');
+  b.addEventListener('click',()=>switchView(v.id));
+  navEl.appendChild(b);
+});
+function switchView(id){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.view===id));
+  document.querySelectorAll('.view').forEach(s=>s.hidden = s.id!=='view-'+id);
+  const v = VIEWS.find(x=>x.id===id);
+  document.getElementById('view-title').textContent = v.label;
+  document.getElementById('view-sub').textContent = v.sub;
+}
+
+/* ---------------- DRAWER ---------------- */
+const overlay=document.getElementById('overlay'), drawer=document.getElementById('drawer');
+function openDrawer(title,sub,html){
+  document.getElementById('drawer-title').textContent=title;
+  document.getElementById('drawer-sub').textContent=sub||'';
+  document.getElementById('drawer-body').innerHTML=html;
+  overlay.classList.add('open'); drawer.classList.add('open');
+}
+function closeDrawer(){overlay.classList.remove('open'); drawer.classList.remove('open');}
+overlay.addEventListener('click', closeDrawer);
+document.getElementById('drawer-close').addEventListener('click', closeDrawer);
+
+/* ---------------- DASHBOARD ---------------- */
+function renderDashboard(){
+  const kpis = [
+    {lbl:'Заявок сегодня', val:'18', delta:'+4 к вчера', cls:'up'},
+    {lbl:'Аварийных в работе', val:'2', delta:'SLA под контролем', cls:'warn'},
+    {lbl:'Средний чек', val:'2 140 ₽', delta:'+6% за месяц', cls:'up'},
+    {lbl:'Диагностика → оплата', val:'61%', delta:'+3 п.п.', cls:'up'},
+    {lbl:'Активных подписок', val:'64', delta:'MRR 127 736 ₽', cls:'up'},
+    {lbl:'Рейтинг сервиса', val:'4.9 ★', delta:'75 отзывов, 2ГИС', cls:'up'},
+  ];
+  document.getElementById('kpi-grid').innerHTML = kpis.map(k=>`<div class="kpi"><div class="lbl">${k.lbl}</div><div class="val">${k.val}</div><div class="delta ${k.cls}">${k.delta}</div></div>`).join('');
+
+  const weeks=[312,298,335,360,341,378,402,417];
+  const max=Math.max(...weeks);
+  document.getElementById('rev-bars').innerHTML = weeks.map((w,i)=>`<div class="bar-col"><div class="bar" style="height:${(w/max*100).toFixed(0)}%"></div><div class="wk num">${w}k</div></div>`).join('');
+
+  const risks=[
+    {dot:'crit', t:'Наряд №2481 — авария у Панова Д.', s:'SLA истекает через 42 минуты, мастер Степан в пути', meta:'сегодня'},
+    {dot:'warn', t:'Договор ТСЖ «Зелёная роща»', s:'Истекает 26.09.2026 — нужна пролонгация', meta:'12 дней'},
+    {dot:'warn', t:'Остаток радиаторов (Радиат)', s:'4 шт при минимуме 6 — оформить закупку', meta:'склад'},
+    {dot:'info', t:'Виктор Дегтярёв — плановый визит по подписке', s:'«Без проблем», диагностика раз в квартал', meta:'через 3 дня'},
+    {dot:'good', t:'Наряд №2476 закрыт', s:'Замена счётчика, Сотникова Л. — акт подписан', meta:'вчера'},
+  ];
+  document.getElementById('risk-list').innerHTML = risks.map(r=>`<div class="list-row"><div class="dot ${r.dot}"></div><div class="t"><b>${r.t}</b><span>${r.s}</span></div><div class="meta">${r.meta}</div></div>`).join('');
+
+  document.getElementById('dash-tasks').innerHTML = TASKS.filter(t=>t.who==='Виктория').map(t=>`<div class="task-item ${taskState[t.id].done?'done':''}"><input type="checkbox" ${taskState[t.id].done?'checked':''} data-task="${t.id}"><span class="txt">${t.txt}</span></div>`).join('');
+
+  renderFunnel('dash-funnel', [['Заявка',100],['Диагностика',78],['Предложение',61],['Оплата',44]]);
+}
+function renderFunnel(elId, steps){
+  document.getElementById(elId).innerHTML = steps.map(([label,pct])=>`<div class="fstep"><span>${label}</span><div class="ftrack"><div class="ffill" style="width:${pct}%"></div></div><span class="num">${pct}%</span></div>`).join('');
+}
+
+/* ---------------- KANBAN ---------------- */
+function renderKanban(containerId, stages, deals, stageState, storeKey){
+  const el = document.getElementById(containerId);
+  el.innerHTML='';
+  stages.forEach((stageName, idx)=>{
+    const col=document.createElement('div');
+    col.className='kcol'; col.dataset.stage=idx;
+    const cards = deals.filter(d=>stageState[d.id]===idx);
+    col.innerHTML = `<div class="kcol-h"><b>${stageName}</b><span class="cnt">${cards.length}</span></div>`;
+    cards.forEach(d=>{
+      const c=document.createElement('div');
+      c.className='kcard'; c.draggable=true; c.dataset.id=d.id;
+      c.innerHTML=`<b>${d.name}</b><div class="addr">${d.addr}</div><div class="addr">${d.note}</div><div class="foot"><span class="price">${d.price}</span></div>`;
+      c.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', d.id); setTimeout(()=>c.classList.add('drag-ghost'),0); });
+      c.addEventListener('dragend', ()=>c.classList.remove('drag-ghost'));
+      col.appendChild(c);
+    });
+    col.addEventListener('dragover', e=>{ e.preventDefault(); col.classList.add('dragover'); });
+    col.addEventListener('dragleave', ()=>col.classList.remove('dragover'));
+    col.addEventListener('drop', e=>{
+      e.preventDefault(); col.classList.remove('dragover');
+      const id=e.dataTransfer.getData('text/plain');
+      stageState[id]=idx; LS.set(storeKey, stageState);
+      renderKanban(containerId, stages, deals, stageState, storeKey);
+    });
+    el.appendChild(col);
+  });
+}
+document.getElementById('deal-tabs').addEventListener('click', e=>{
+  const btn=e.target.closest('.tab-btn'); if(!btn) return;
+  document.querySelectorAll('#deal-tabs .tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+  document.getElementById('kanban-b2c').style.display = btn.dataset.pipe==='b2c' ? 'grid' : 'none';
+  document.getElementById('kanban-b2b').style.display = btn.dataset.pipe==='b2b' ? 'grid' : 'none';
+});
+
+/* ---------------- ORDERS ---------------- */
+function renderOrders(filter){
+  filter = filter || 'all';
+  let rows = ORDERS;
+  if(filter==='emg') rows = rows.filter(o=>o.type==='emg');
+  if(filter==='today') rows = rows.filter(o=>o.when.toLowerCase().includes('сегодня')||o.type==='emg');
+  if(filter==='done') rows = rows.filter(o=>o.status==='Завершено'||o.status==='Акт готов');
+  const typeLbl = {emg:'Авария', plan:'Плановая', diag:'Диагностика'};
+  const head = `<thead><tr><th>№</th><th>Клиент / адрес</th><th>Услуга</th><th>Тип</th><th>Мастер</th><th>Статус</th><th>Срок / SLA</th></tr></thead>`;
+  const body = rows.map(o=>`<tr class="rowlink" data-order="${o.id}">
+      <td class="num">#${o.id}</td>
+      <td><b>${o.client}</b><br><span style="color:var(--muted);font-size:11.5px;">${o.addr}</span></td>
+      <td>${o.service}</td>
+      <td><span class="pill ${o.type==='emg'?'crit':o.type==='diag'?'warn':'info'}">${typeLbl[o.type]}</span></td>
+      <td>${o.master}</td>
+      <td><span class="pill ${o.sev}">${o.status}</span></td>
+      <td class="num">${o.when}</td>
+    </tr>`).join('');
+  document.getElementById('orders-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.querySelectorAll('#orders-table tr.rowlink').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      const o = ORDERS.find(x=>x.id===tr.dataset.order);
+      openDrawer('Наряд #'+o.id, o.client, `
+        <div class="kv"><b>Адрес</b><span>${o.addr}</span><b>Услуга</b><span>${o.service}</span><b>Тип</b><span>${typeLbl[o.type]}</span><b>Мастер</b><span>${o.master}</span><b>Статус</b><span>${o.status}</span><b>Срок</b><span>${o.when}</span></div>
+        <div class="card pad" style="background:var(--surface-2);border:none;"><b style="font-size:12.5px;">Чек-лист диспетчера</b>
+          <div class="task-item" style="margin-top:8px;"><input type="checkbox" checked><span class="txt">Заявка принята, клиент проинформирован</span></div>
+          <div class="task-item"><input type="checkbox" ${o.status!=='Назначен'?'checked':''}><span class="txt">Мастер назначен и выехал</span></div>
+          <div class="task-item"><input type="checkbox" ${o.status==='Завершено'||o.status==='Акт готов'?'checked':''}><span class="txt">Акт выполненных работ оформлен</span></div>
+        </div>`);
+    });
+  });
+}
+document.getElementById('order-filters').addEventListener('click', e=>{
+  const btn=e.target.closest('.tab-btn'); if(!btn) return;
+  document.querySelectorAll('#order-filters .tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+  renderOrders(btn.dataset.f);
+});
+
+/* ---------------- LEADS ---------------- */
+const LEAD_STATUS_LBL = {new:'Новый', progress:'В работе', qualified:'Квалифицирован'};
+const LEAD_STATUS_PILL = {new:'crit', progress:'warn', qualified:'good'};
+function renderLeads(filter){
+  filter = filter || 'all';
+  const rows = filter==='all' ? LEADS : LEADS.filter(l=>l.status===filter);
+  document.getElementById('leads-kpi').innerHTML = `
+    <div class="kpi"><div class="lbl">Новых сегодня</div><div class="val">${LEADS.filter(l=>l.status==='new').length}</div><div class="delta up">из 6 каналов</div></div>
+    <div class="kpi"><div class="lbl">Лид → сделка</div><div class="val">38%</div><div class="delta up">+4 п.п. за месяц</div></div>
+    <div class="kpi"><div class="lbl">Среднее время ответа</div><div class="val">6 мин</div><div class="delta up">ИИ-агент + операторы</div></div>
+    <div class="kpi"><div class="lbl">Из мессенджеров</div><div class="val">73%</div><div class="delta info" style="background:var(--info-soft);color:var(--info);">звонки — 27%</div></div>`;
+  const head=`<thead><tr><th>Источник</th><th>Контакt</th><th>Обращение</th><th>Статус</th><th>Ответственный</th><th>Когда</th></tr></thead>`;
+  const body=rows.map(l=>`<tr class="rowlink" data-lead="${l.id}">
+      <td><span class="chan-badge ${'chan-'+l.chan}">${l.chanLabel}</span></td>
+      <td><b>${l.name}</b></td><td style="max-width:260px;">${l.text}</td>
+      <td><span class="pill ${LEAD_STATUS_PILL[l.status]}">${LEAD_STATUS_LBL[l.status]}</span></td>
+      <td>${l.owner}</td><td class="num">${l.when}</td></tr>`).join('');
+  document.getElementById('leads-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.querySelectorAll('#leads-table tr.rowlink').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      const l=LEADS.find(x=>x.id===tr.dataset.lead);
+      openDrawer(l.name, l.chanLabel+' · '+LEAD_STATUS_LBL[l.status], `
+        <div class="kv"><b>Канал</b><span>${l.chanLabel}</span><b>Обращение</b><span>${l.text}</span><b>Ответственный</b><span>${l.owner}</span><b>Получен</b><span>${l.when}</span></div>
+        <p class="section-desc">Полная переписка по этому лиду — во вкладке «Чат».</p>`);
+    });
+  });
+}
+document.getElementById('lead-filters').addEventListener('click', e=>{
+  const btn=e.target.closest('.tab-btn'); if(!btn) return;
+  document.querySelectorAll('#lead-filters .tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+  renderLeads(btn.dataset.f);
+});
+
+/* ---------------- CLIENTS ---------------- */
+function renderClients(){
+  const head=`<thead><tr><th>Клиент / объект</th><th>Тип</th><th>Адрес</th><th>Заявок</th><th>Подписка</th></tr></thead>`;
+  const body=CLIENTS.map(c=>`<tr class="rowlink" data-client="${c.id}">
+    <td><b>${c.name}</b></td><td>${c.type}</td><td>${c.addr}</td><td class="num">${c.orders}</td>
+    <td><span class="pill ${c.sub.includes('истекает')?'warn':c.sub==='Нет подписки'?'plain':c.sub.includes('оформляется')?'info':'good'}">${c.sub}</span></td></tr>`).join('');
+  document.getElementById('clients-table').innerHTML=head+'<tbody>'+body+'</tbody>';
+  document.querySelectorAll('#clients-table tr.rowlink').forEach(tr=>{
+    tr.addEventListener('click', ()=>{
+      const c=CLIENTS.find(x=>x.id===tr.dataset.client);
+      openDrawer(c.name, c.type+' · '+c.addr, `
+        <div class="kv"><b>Телефон</b><span>${c.phone}</span><b>Приборы</b><span>${c.devices}</span><b>Подписка</b><span>${c.sub}</span></div>
+        <div><b style="font-size:12.5px;">История работ</b><div class="timeline" style="margin-top:8px;">${c.history.map(h=>`<div class="tl-item"><b>${h[1]} — ${h[2]}</b><span>${h[0]}</span></div>`).join('')}</div></div>`);
+    });
+  });
+}
+
+/* ---------------- DOCUMENTS ---------------- */
+function money(n){ return (Number(n)||0).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ₽'; }
+function docItemsTable(items, nameLabel){
+  const rows = items.map((it,i)=>`<tr><td>${i+1}</td><td>${it.name||'—'}</td><td class="num">${it.qty}</td><td>${it.unit}</td><td class="num">${money(it.price)}</td><td class="num">${money(it.qty*it.price)}</td></tr>`).join('');
+  return `<table class="doc-table"><thead><tr><th>№</th><th>${nameLabel}</th><th class="num">Кол-во</th><th>Ед.</th><th class="num">Цена</th><th class="num">Сумма</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function docSignBlock(ctx, label, withStamp){
+  return `<div class="doc-sign"><div class="doc-sign-line">${label}: _____________________ ${ctx.assets.signature?`<img class="doc-sign-img" src="${ctx.assets.signature}">`:''}</div>
+    ${withStamp && ctx.assets.stamp ? `<img class="doc-stamp-img" src="${ctx.assets.stamp}">` : ''}</div>`;
+}
+function buildInvoiceHTML(ctx){
+  return `<div class="doc-page">
+    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr} · тел. ${ctx.company.phone}</div><div class="doc-num">Счёт на оплату № ${ctx.num}<br>от ${ctx.date}</div></div>
+    <div class="doc-parties">
+      <div><b>Поставщик:</b> ${ctx.company.name}<br>Банк: ${ctx.company.bank}, р/с ${ctx.company.rs}<br>к/с ${ctx.company.ks}, БИК ${ctx.company.bik}</div>
+      <div><b>Покупатель:</b> ${ctx.client}${ctx.basis?('<br>Основание: '+ctx.basis):''}</div>
+    </div>
+    ${docItemsTable(ctx.items,'Наименование услуги')}
+    <div class="doc-total">Итого к оплате: <b>${money(ctx.total)}</b><br><span style="font-size:10.8px;color:#4a5560;">НДС не облагается (УСН)</span></div>
+    ${docSignBlock(ctx,'Руководитель',true)}
+  </div>`;
+}
+function buildActHTML(ctx){
+  return `<div class="doc-page">
+    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr} · тел. ${ctx.company.phone}</div><div class="doc-num">Акт № ${ctx.num}<br>от ${ctx.date}</div></div>
+    <div class="doc-title">Акт выполненных работ</div>
+    <div class="doc-parties"><div><b>Исполнитель:</b> ${ctx.company.name}</div><div><b>Заказчик:</b> ${ctx.client}${ctx.basis?('<br>Основание: '+ctx.basis):''}</div></div>
+    ${docItemsTable(ctx.items,'Наименование работ / услуг')}
+    <div class="doc-total">Итого выполнено на сумму: <b>${money(ctx.total)}</b></div>
+    <p class="doc-note">Работы выполнены полностью и в срок. Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.</p>
+    <div class="doc-sign-row">${docSignBlock(ctx,'Исполнитель',true)}${docSignBlock(ctx,'Заказчик',false)}</div>
+  </div>`;
+}
+function buildTorgHTML(ctx){
+  return `<div class="doc-page">
+    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr}</div><div class="doc-num">Товарная накладная № ${ctx.num}<br>от ${ctx.date}<br><span style="font-size:10.3px;color:#4a5560;">Форма ТОРГ-12</span></div></div>
+    <div class="kv" style="grid-template-columns:150px 1fr;margin-bottom:12px;color:#1b1f23;">
+      <b>Грузоотправитель</b><span>${ctx.company.name}, ${ctx.company.addr}</span>
+      <b>Грузополучатель</b><span>${ctx.client}</span>
+      <b>Поставщик</b><span>${ctx.company.name}, ИНН ${ctx.company.inn}</span>
+      <b>Плательщик</b><span>${ctx.client}</span>
+      <b>Основание</b><span>${ctx.basis||'договор поставки'}</span>
+    </div>
+    ${docItemsTable(ctx.items,'Товар')}
+    <div class="doc-total">Всего отпущено на сумму: <b>${money(ctx.total)}</b></div>
+    <div class="doc-sign-row">${docSignBlock(ctx,'Отпуск разрешил / отпустил',true)}${docSignBlock(ctx,'Груз принял / получил',false)}</div>
+  </div>`;
+}
+function renderDocItemsTable(){
+  const head=`<thead><tr><th>Наименование</th><th style="width:70px;">Кол-во</th><th style="width:70px;">Ед.</th><th style="width:110px;">Цена, ₽</th><th style="width:110px;">Сумма</th><th></th></tr></thead>`;
+  const body=docItems.map((it,i)=>`<tr>
+      <td><input class="doc-row-input" data-i="${i}" data-f="name" value="${it.name}" placeholder="Например, замена смесителя"></td>
+      <td><input class="doc-row-input" data-i="${i}" data-f="qty" type="number" min="0" value="${it.qty}"></td>
+      <td><input class="doc-row-input" data-i="${i}" data-f="unit" value="${it.unit}"></td>
+      <td><input class="doc-row-input" data-i="${i}" data-f="price" type="number" min="0" value="${it.price}"></td>
+      <td class="num">${money(it.qty*it.price)}</td>
+      <td><button class="drawer-close" data-remove="${i}" title="Удалить строку">✕</button></td>
+    </tr>`).join('');
+  document.getElementById('doc-items-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.getElementById('doc-total-preview').textContent = money(docItems.reduce((s,it)=>s+it.qty*it.price,0));
+  document.querySelectorAll('.doc-row-input').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const i=+inp.dataset.i, f=inp.dataset.f;
+      docItems[i][f] = (f==='qty'||f==='price') ? Number(inp.value)||0 : inp.value;
+      renderDocItemsTable();
+    });
+  });
+  document.querySelectorAll('[data-remove]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ docItems.splice(+btn.dataset.remove,1); if(!docItems.length) docItems.push({name:'',qty:1,unit:'шт',price:0}); renderDocItemsTable(); });
+  });
+}
+function renderDocLog(){
+  const head=`<thead><tr><th>№</th><th>Тип</th><th>Клиент / контрагент</th><th>Дата</th><th>Сумма</th><th>Статус</th></tr></thead>`;
+  const body=DOC_LOG.map(d=>`<tr><td class="num">№${d.id}</td><td>${d.type}</td><td>${d.client}</td><td class="num">${d.date}</td><td class="num">${d.amount}</td><td><span class="pill good">${d.status==='good'?'готов':d.status}</span></td></tr>`).join('');
+  document.getElementById('doc-log-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+}
+function renderDocuments(){
+  const fields = [['name','Организация'],['inn','ИНН'],['ogrn','ОГРН/ОГРНИП'],['addr','Адрес'],['phone','Телефон'],['bank','Банк'],['rs','Расчётный счёт'],['ks','Корр. счёт'],['bik','БИК']];
+  document.getElementById('company-fields').innerHTML = fields.map(([k,label])=>`<label class="field">${label}<input data-company="${k}" value="${COMPANY[k]}"></label>`).join('');
+  document.querySelectorAll('[data-company]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ COMPANY[inp.dataset.company]=inp.value; LS.set('vika_company', COMPANY); });
+  });
+
+  const clientSel = document.getElementById('doc-client');
+  clientSel.innerHTML = CLIENTS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('') + `<option value="__other">Другое (ввести вручную в поле «Основание»)</option>`;
+
+  const today = new Date().toLocaleDateString('ru-RU');
+  document.getElementById('doc-numdate').value = `№ ${docCounter+1} от ${today}`;
+
+  const ASSET_PREVIEW_EL = {stamp:'stamp-preview', signature:'sign-preview'};
+  function refreshAssetPreview(kind){
+    const el = document.getElementById(ASSET_PREVIEW_EL[kind]);
+    const src = DOC_ASSETS[kind];
+    el.innerHTML = src ? `<img src="${src}" style="height:56px;background:#fff;border-radius:6px;padding:4px;border:1px solid var(--border);">` : `<span style="font-size:11px;color:var(--muted);">не загружено</span>`;
+  }
+  refreshAssetPreview('stamp'); refreshAssetPreview('signature');
+  document.getElementById('stamp-file').addEventListener('change', e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader(); r.onload=ev=>{ DOC_ASSETS.stamp=ev.target.result; LS.set('vika_doc_assets',DOC_ASSETS); refreshAssetPreview('stamp'); }; r.readAsDataURL(f);
+  });
+  document.getElementById('sign-file').addEventListener('change', e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const r=new FileReader(); r.onload=ev=>{ DOC_ASSETS.signature=ev.target.result; LS.set('vika_doc_assets',DOC_ASSETS); refreshAssetPreview('signature'); }; r.readAsDataURL(f);
+  });
+
+  renderDocItemsTable();
+  document.getElementById('doc-add-row').addEventListener('click', ()=>{ docItems.push({name:'',qty:1,unit:'шт',price:0}); renderDocItemsTable(); });
+
+  document.getElementById('doc-generate').addEventListener('click', ()=>{
+    docCounter++; LS.set('vika_doc_counter', docCounter);
+    const type = document.getElementById('doc-type').value;
+    const clientVal = clientSel.value;
+    const ctx = {
+      company: COMPANY, assets: DOC_ASSETS,
+      client: clientVal==='__other' ? (document.getElementById('doc-basis').value || 'Клиент не указан') : clientVal,
+      basis: document.getElementById('doc-basis').value,
+      num: docCounter, date: today,
+      items: docItems.filter(it=>it.name||it.qty||it.price),
+      total: docItems.reduce((s,it)=>s+it.qty*it.price,0),
+    };
+    if(!ctx.items.length) ctx.items=[{name:'—',qty:1,unit:'шт',price:0}];
+    const typeLbl = {invoice:'Счёт на оплату', act:'Акт выполненных работ', torg12:'Накладная ТОРГ-12'};
+    const html = type==='invoice' ? buildInvoiceHTML(ctx) : type==='act' ? buildActHTML(ctx) : buildTorgHTML(ctx);
+    document.getElementById('doc-print-area').innerHTML = html;
+    document.getElementById('doc-preview-card').hidden = false;
+    document.getElementById('doc-preview-card').scrollIntoView({behavior:'smooth', block:'start'});
+    DOC_LOG.unshift({id:String(docCounter), type:typeLbl[type], client:ctx.client, date:today, amount:money(ctx.total), status:'good'});
+    LS.set('vika_doc_log', DOC_LOG);
+    renderDocLog();
+    document.getElementById('doc-numdate').value = `№ ${docCounter+1} от ${today}`;
+  });
+  document.getElementById('doc-print-btn').addEventListener('click', ()=>window.print());
+
+  renderDocLog();
+}
+
+/* ---------------- CALENDAR ---------------- */
+function renderCalendar(){
+  const today=new Date();
+  const monday=new Date(today); monday.setDate(today.getDate()-((today.getDay()+6)%7));
+  const days=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  const fmt=d=>d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+  const sunday=new Date(monday); sunday.setDate(monday.getDate()+6);
+  document.getElementById('cal-week').textContent = `Неделя: ${fmt(monday)} – ${fmt(sunday)}`;
+  const grid=document.getElementById('cal-grid');
+  let html = `<div class="hcell"></div>` + days.map((d,i)=>{
+    const dt=new Date(monday); dt.setDate(monday.getDate()+i);
+    return `<div class="hcell">${d}, ${dt.getDate()}</div>`;
+  }).join('');
+  const masters=['Айдар','Степан','Максим','Виталий'];
+  masters.forEach(m=>{
+    html += `<div class="mrow-label">${m}</div>`;
+    for(let d=0; d<7; d++){
+      const evs=CAL_EVENTS.filter(e=>e.master===m && e.day===d);
+      html += `<div class="cell">${evs.map(e=>`<div class="ev ${e.type}" data-ev='${JSON.stringify(e).replace(/'/g,"&apos;")}'>${e.time}<br>${e.title}</div>`).join('')}</div>`;
+    }
+  });
+  grid.innerHTML = html;
+  grid.querySelectorAll('.ev').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const e = JSON.parse(el.dataset.ev.replace(/&apos;/g,"'"));
+      const typeLbl={plan:'Плановый визит',emg:'Аварийный вызов',diag:'Диагностика',done:'Завершено'};
+      openDrawer(e.title, typeLbl[e.type], `<div class="kv"><b>Мастер</b><span>${e.master}</span><b>Время</b><span>${e.time}</span><b>Тип</b><span>${typeLbl[e.type]}</span></div>`);
+    });
+  });
+}
+
+/* ---------------- SUBSCRIPTIONS ---------------- */
+function renderSubs(){
+  const totalCount = SUB_TIERS.reduce((s,t)=>s+t.count,0);
+  const mrr = SUB_TIERS.reduce((s,t)=>s+t.count*t.price,0);
+  document.getElementById('subs-kpi').innerHTML = `
+    <div class="kpi"><div class="lbl">Всего подписчиков</div><div class="val">${totalCount}</div><div class="delta up">+5 за месяц</div></div>
+    <div class="kpi"><div class="lbl">MRR</div><div class="val">${mrr.toLocaleString('ru-RU')} ₽</div><div class="delta up">+8% м/м</div></div>
+    <div class="kpi"><div class="lbl">Отток за месяц</div><div class="val">3</div><div class="delta warn">4.7%</div></div>
+    ${SUB_TIERS.map(t=>`<div class="kpi"><div class="lbl">${t.name}</div><div class="val">${t.count}</div><div class="delta info" style="background:var(--info-soft);color:var(--info);">${t.price} ₽/мес</div></div>`).join('')}
+  `;
+  const head=`<thead><tr><th>Клиент</th><th>Тариф</th><th>Адрес</th><th>Активна с</th><th>Продление</th><th>Статус</th></tr></thead>`;
+  const body=SUBSCRIBERS.map(s=>`<tr><td><b>${s.name}</b></td><td>${s.tier}</td><td>${s.addr}</td><td class="num">${s.since}</td><td class="num">${s.renew}</td><td><span class="pill ${s.status}">${s.status==='good'?'активна':'внимание'}</span></td></tr>`).join('');
+  document.getElementById('subs-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+}
+
+/* ---------------- B2B CONTRACTS ---------------- */
+function renderB2B(){
+  const head=`<thead><tr><th>Организация</th><th>Домов</th><th>SLA</th><th>Действует до</th><th>Статус</th></tr></thead>`;
+  const body=B2B_CONTRACTS.map(c=>`<tr><td><b>${c.name}</b></td><td class="num">${c.houses}</td><td>${c.sla}</td><td class="num">${c.until}</td><td><span class="pill ${c.status}">${c.status==='good'?'действует':c.status==='warn'?'истекает':'в работе'}</span></td></tr>`).join('');
+  document.getElementById('b2b-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+}
+
+/* ---------------- CONTACT CENTER ---------------- */
+function renderContactCenter(){
+  document.getElementById('chan-grid').innerHTML = CHANNELS.map(c=>`
+    <div class="card chan-card">
+      <div class="top"><div class="chan-ico ${c.cls}">${c.ico}</div><div><b style="font-size:13.5px;">${c.name}</b><br><span class="pill ${c.status}">${c.status==='good'?'подключено':'нужно внимание'}</span></div></div>
+      <div style="font-size:11.8px;color:var(--ink-soft);">${c.desc}</div>
+      <div style="font-size:11.3px;color:var(--muted);">${c.stat}</div>
+    </div>`).join('');
+}
+
+/* ---------------- CHAT ---------------- */
+const CHAN_LBL = {tg:'Telegram',wa:'WhatsApp',ig:'Instagram',avito:'Авито',email:'Email',site:'Сайт'};
+let activeChatId = CHAT_THREADS[0].id;
+function renderChatList(){
+  document.getElementById('chat-list').innerHTML = CHAT_THREADS.map(t=>`
+    <div class="chat-item ${t.id===activeChatId?'active':''}" data-chat="${t.id}">
+      <div class="ava">${initials(t.name)}</div>
+      <div class="meta">
+        <div class="row1"><b>${t.name}</b><span class="time">${t.msgs[t.msgs.length-1].time}</span></div>
+        <div class="preview">${t.preview}</div>
+        <span class="chan-badge chan-${t.chan}" style="margin-top:4px;">${CHAN_LBL[t.chan]}</span>
+        ${t.unread? `<span class="unread" style="float:right;margin-top:-16px;">${t.unread}</span>`:''}
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.chat-item').forEach(el=>{
+    el.addEventListener('click', ()=>{ activeChatId=el.dataset.chat; CHAT_THREADS.find(t=>t.id===activeChatId).unread=0; renderChatList(); renderChatThread(); });
+  });
+}
+function renderChatThread(){
+  const t = CHAT_THREADS.find(x=>x.id===activeChatId);
+  const dirClass = {in:'in', out:'out', bot:'bot'};
+  document.getElementById('chat-thread').innerHTML = `
+    <div class="chat-thread-head"><div><b style="font-size:13.5px;">${t.name}</b> <span class="chan-badge chan-${t.chan}">${CHAN_LBL[t.chan]}</span></div><span class="pill plain">чат демо-режим</span></div>
+    <div class="chat-msgs">${t.msgs.map(m=>`<div class="msg ${dirClass[m.dir]}">${m.text}<span class="mtime">${m.dir==='bot'?'ИИ-агент · ':''}${m.time}</span></div>`).join('')}</div>
+    <div class="chat-input"><input id="chat-input-box" placeholder="Написать сообщение…"><button id="chat-send-btn">Отправить</button></div>`;
+  document.getElementById('chat-send-btn').addEventListener('click', ()=>{
+    const box=document.getElementById('chat-input-box'); if(!box.value.trim()) return;
+    t.msgs.push({dir:'out', text:box.value.trim(), time:'сейчас'}); t.preview=box.value.trim();
+    box.value=''; renderChatThread(); renderChatList();
+  });
+}
+function renderChat(){ renderChatList(); renderChatThread(); }
+
+/* ---------------- AI AGENT ---------------- */
+function renderAIAgent(){
+  const slider=document.getElementById('temp-slider'), tv=document.getElementById('temp-val');
+  slider.addEventListener('input', ()=>{ tv.textContent = slider.value; });
+  const lslider=document.getElementById('len-slider'), lv=document.getElementById('len-val');
+  const lenLbl=['Короткая','Средняя','Подробная'];
+  lslider.addEventListener('input', ()=>{ lv.textContent = lenLbl[lslider.value]; });
+
+  document.getElementById('ai-skills').innerHTML = AI_SKILLS.map((s,i)=>`
+    <div class="toggle-row"><span class="name">${s.name}</span><label class="toggle"><input type="checkbox" ${s.on?'checked':''} data-skill="${i}"><span class="track"></span></label></div>`).join('');
+  document.getElementById('ai-channels').innerHTML = AI_CHANNELS.map((c,i)=>`
+    <div class="toggle-row"><span class="name">${c.name}</span><label class="toggle"><input type="checkbox" ${c.on?'checked':''} data-aichan="${i}"><span class="track"></span></label></div>`).join('');
+  document.querySelectorAll('[data-skill]').forEach(inp=>inp.addEventListener('change', ()=>{ AI_SKILLS[+inp.dataset.skill].on = inp.checked; }));
+  document.querySelectorAll('[data-aichan]').forEach(inp=>inp.addEventListener('change', ()=>{ AI_CHANNELS[+inp.dataset.aichan].on = inp.checked; }));
+}
+
+/* ---------------- KNOWLEDGE BASE ---------------- */
+function renderKB(){
+  const usedCount = KB_ARTICLES.filter(a=>a.used).length;
+  document.getElementById('kb-kpi').innerHTML = `
+    <div class="kpi"><div class="lbl">Документов в базе</div><div class="val">${KB_ARTICLES.length}</div><div class="delta up">+2 за месяц</div></div>
+    <div class="kpi"><div class="lbl">Используется ИИ-агентом</div><div class="val">${usedCount}</div><div class="delta up">из ${KB_ARTICLES.length}</div></div>
+    <div class="kpi"><div class="lbl">Последнее обновление</div><div class="val">сегодня</div><div class="delta info" style="background:var(--info-soft);color:var(--info);">прайс-лист</div></div>`;
+  const head=`<thead><tr><th>Документ</th><th>Категория</th><th>Обновлён</th><th>Для ИИ-агента</th></tr></thead>`;
+  const body=KB_ARTICLES.map(a=>`<tr><td><b>${a.title}</b></td><td><span class="pill plain">${a.cat}</span></td><td class="num">${a.updated}</td><td><span class="pill ${a.used?'good':'plain'}">${a.used?'используется':'нет'}</span></td></tr>`).join('');
+  document.getElementById('kb-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+}
+
+/* ---------------- STOCK ---------------- */
+function renderStock(){
+  const head=`<thead><tr><th>Материал</th><th>Остаток</th><th>Минимум</th><th>Статус</th></tr></thead>`;
+  const body=STOCK.map(s=>`<tr><td>${s.name}</td><td class="num">${s.qty}</td><td class="num">${s.min}</td><td><span class="pill ${s.status}">${s.status==='crit'?'заказать':s.status==='warn'?'на исходе':'в норме'}</span></td></tr>`).join('');
+  document.getElementById('stock-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.getElementById('tools-list').innerHTML = TOOLS.map(t=>`<div class="list-row"><div class="dot info"></div><div class="t"><b>${t.who}</b><span>${t.what}</span></div><div class="meta">${t.since}</div></div>`).join('');
+  document.getElementById('suppliers-list').innerHTML = SUPPLIERS.map(s=>`<div class="supplier"><div><b>${s.name}</b><div style="color:var(--muted);font-size:11.5px;">${s.cat}</div></div><span class="pill good">${s.disc}</span></div>`).join('');
+}
+
+/* ---------------- IMPORT ---------------- */
+function handleImportFile(catLabel, file, previewElId, resultElId){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    let dataRows=[], headers=[], sheetName='', ok=true;
+    try{
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      sheetName = wb.SheetNames[0];
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], {header:1, defval:''});
+      headers = rows[0] || [];
+      dataRows = rows.slice(1).filter(r=>r.some(c=>String(c).trim()!==''));
+    }catch(err){ ok=false; }
+    const el = document.getElementById(previewElId);
+    if(!ok){ el.innerHTML = '<div class="import-preview" style="color:var(--crit);">Не удалось прочитать файл. Поддерживаются .xlsx, .xls, .csv</div>'; return; }
+    const previewRows = dataRows.slice(0,5);
+    el.innerHTML = `<div class="import-preview">
+        <b>${file.name}</b> · лист «${sheetName}» · строк с данными: <span class="num">${dataRows.length}</span><br>
+        Колонки: ${headers.map(h=>`<span class="pill plain" style="margin:2px 3px 0 0;display:inline-block;">${h||'—'}</span>`).join('')}
+        <div class="table-wrap" style="margin-top:8px;"><table class="grid"><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${previewRows.map(r=>`<tr>${headers.map((h,i)=>`<td>${r[i]!==undefined?r[i]:''}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+        <button class="tab-btn active" style="margin-top:10px;">Импортировать ${dataRows.length} записей</button>
+      </div>`;
+    el.querySelector('button').addEventListener('click', ()=>{
+      const log = document.getElementById(resultElId);
+      const row=document.createElement('div'); row.className='list-row';
+      row.innerHTML = `<div class="dot good"></div><div class="t"><b>${catLabel}: импортировано ${dataRows.length} записей</b><span>Файл ${file.name} · только что</span></div><div class="meta">готово</div>`;
+      log.prepend(row);
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+function renderImport(){
+  const grid=document.getElementById('import-grid');
+  grid.innerHTML = IMPORT_CATEGORIES.map(c=>`
+    <div class="card import-card" id="import-card-${c.id}">
+      <div><b style="font-size:13.5px;">${c.label}</b><div style="color:var(--muted);font-size:11.6px;margin-top:2px;">${c.desc}</div></div>
+      <div class="fields">Ожидаемые колонки: ${c.fields}</div>
+      <label class="upload-btn" for="file-${c.id}">${ICONS.import} Загрузить Excel / CSV</label>
+      <input type="file" id="file-${c.id}" accept=".xlsx,.xls,.csv" style="display:none;">
+      <div id="preview-${c.id}"></div>
+    </div>`).join('');
+  IMPORT_CATEGORIES.forEach(c=>{
+    document.getElementById('file-'+c.id).addEventListener('change', e=>{
+      const file=e.target.files[0]; if(!file) return;
+      handleImportFile(c.label, file, 'preview-'+c.id, 'import-log');
+    });
+  });
+  const logSeed = [
+    ['Клиенты','218 записей', 'clients_2026.xlsx', '3 дня назад', 'Артур'],
+    ['Поставщики','3 записи', 'suppliers.csv', '2 недели назад', 'Виктория'],
+  ];
+  document.getElementById('import-log').innerHTML = logSeed.map(([cat,count,file,when,who])=>
+    `<div class="list-row"><div class="dot good"></div><div class="t"><b>${cat}: импортировано ${count}</b><span>${file} · ${when} · ${who}</span></div><div class="meta">готово</div></div>`).join('');
+  document.getElementById('btn-open-import').addEventListener('click', ()=>{
+    grid.scrollIntoView({behavior:'smooth', block:'start'});
+    grid.classList.add('import-flash'); setTimeout(()=>grid.classList.remove('import-flash'), 1000);
+  });
+}
+
+/* ---------------- STAFF ---------------- */
+function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function renderStaff(){
+  document.getElementById('staff-grid').innerHTML = TEAM.map(p=>`
+    <div class="card emp-card">
+      <div class="emp-top"><div class="emp-ava">${initials(p.name)}</div><div><b>${p.name}</b><span>${p.role}</span></div></div>
+      <div style="font-size:11.8px;color:var(--ink-soft);">${p.spec}</div>
+      <div class="emp-stats"><span>${p.tenure}</span><span>★ ${p.rating}</span></div>
+      <div><div class="meter"><i style="width:${p.load}%;"></i></div><div class="emp-stats" style="margin-top:4px;"><span>Загрузка</span><span class="num">${p.load}%</span></div></div>
+    </div>`).join('');
+}
+
+/* ---------------- TASKS ---------------- */
+function renderTasks(){
+  ['today','week','done'].forEach(col=>{
+    const items = TASKS.filter(t=>taskState[t.id].col===col);
+    document.getElementById('tasks-'+col).innerHTML = items.map(t=>`
+      <div class="task-item ${taskState[t.id].done?'done':''}">
+        <input type="checkbox" data-task="${t.id}" ${taskState[t.id].done?'checked':''}>
+        <div><span class="who">${t.who}</span><br><span class="txt">${t.txt}</span></div>
+      </div>`).join('') || '<p style="color:var(--muted);font-size:12.5px;">Пусто</p>';
+  });
+}
+document.addEventListener('change', e=>{
+  if(e.target.matches('input[type=checkbox][data-task]')){
+    const id=e.target.dataset.task;
+    taskState[id].done = e.target.checked;
+    taskState[id].col = e.target.checked ? 'done' : (TASKS.find(t=>t.id===id).col==='done' ? 'today' : TASKS.find(t=>t.id===id).col);
+    LS.set('vika_tasks', taskState);
+    renderTasks(); renderDashboard();
+  }
+});
+
+/* ---------------- ANALYTICS ---------------- */
+function renderAnalytics(){
+  document.getElementById('an-kpi').innerHTML = `
+    <div class="kpi"><div class="lbl">Выручка / мес</div><div class="val">1 496 236 ₽</div><div class="delta up">+9% м/м</div></div>
+    <div class="kpi"><div class="lbl">Разовые работы</div><div class="val">1 153 800 ₽</div><div class="delta up">77% от выручки</div></div>
+    <div class="kpi"><div class="lbl">Подписки (MRR)</div><div class="val">127 736 ₽</div><div class="delta up">64 клиента</div></div>
+    <div class="kpi"><div class="lbl">Договоры Б2Б</div><div class="val">214 500 ₽</div><div class="delta up">4 партнёра</div></div>
+  `;
+  const channels=[['Разовые работы',1153800],['Договоры Б2Б',214500],['Подписки',127736]];
+  const max=Math.max(...channels.map(c=>c[1]));
+  document.getElementById('an-channels').innerHTML = channels.map(([n,v])=>`
+    <div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>${n}</span><span class="num">${v.toLocaleString('ru-RU')} ₽</span></div>
+    <div class="ftrack"><div class="ffill" style="width:${(v/max*100).toFixed(0)}%"></div></div></div>`).join('');
+  renderFunnel('an-funnel', [['Заявка',100],['Диагностика',78],['Предложение',61],['Оплата',44],['Повтор / подписка',19]]);
+}
+
+/* ---------------- REPORT BUILDER ---------------- */
+function computeMetricDisplay(m, days){
+  if(m.type==='count'){ const v=Math.max(1,Math.round(m.perDay*days)); return v.toLocaleString('ru-RU'); }
+  if(m.type==='currency'){ const v=Math.round(m.perDay*days); return v.toLocaleString('ru-RU')+' ₽'; }
+  if(m.type==='percent'){ return m.value+'%'; }
+  return String(m.value);
+}
+function reportPeriodLabel(days, custom){
+  if(custom) return `${custom.from} — ${custom.to} (${days} дн.)`;
+  const map={1:'Сегодня',7:'Неделя',30:'Месяц',90:'Квартал',365:'Год'};
+  return map[days] || (days+' дн.');
+}
+function renderReports(){
+  const sel = document.getElementById('rep-entity');
+  sel.innerHTML = Object.entries(REPORT_TEMPLATES).map(([k,t])=>`<option value="${k}">${t.label}</option>`).join('');
+  const periodSel = document.getElementById('rep-period');
+  periodSel.addEventListener('change', ()=>{
+    const custom = periodSel.value==='custom';
+    document.getElementById('rep-from-wrap').style.display = custom ? 'flex' : 'none';
+    document.getElementById('rep-to-wrap').style.display = custom ? 'flex' : 'none';
+  });
+  document.getElementById('rep-generate').addEventListener('click', ()=>{
+    const entityKey = sel.value;
+    const tpl = REPORT_TEMPLATES[entityKey];
+    let days = 30, customInfo = null;
+    if(periodSel.value==='custom'){
+      const from = document.getElementById('rep-from').value, to = document.getElementById('rep-to').value;
+      if(from && to){ days = Math.max(1, Math.round((new Date(to)-new Date(from))/86400000)+1); customInfo={from,to}; }
+    } else { days = Number(periodSel.value); }
+    const pLabel = reportPeriodLabel(days, customInfo);
+    const metricsHTML = tpl.metrics.map(m=>`<div class="kpi"><div class="lbl">${m.label}</div><div class="val">${computeMetricDisplay(m,days)}</div></div>`).join('');
+    const maxB = Math.max(...tpl.breakdown.map(b=>typeof b.value==='number'?b.value:0), 1);
+    const breakdownHTML = tpl.breakdown.map(b=>`<div class="fstep"><span>${b.label}</span><div class="ftrack"><div class="ffill" style="width:${typeof b.value==='number'?(b.value/maxB*100).toFixed(0):0}%"></div></div><span class="num">${typeof b.value==='number'?b.value+'%':b.value}</span></div>`).join('');
+    const nowStr = new Date().toLocaleString('ru-RU');
+    document.getElementById('report-output').innerHTML = `
+      <div class="card pad" style="margin-top:16px;">
+        <div class="section-head">
+          <div><h2 class="section-h">Отчёт: ${tpl.label}</h2><p class="section-desc">Период: ${pLabel} · сформирован ${nowStr}</p></div>
+          <div style="display:flex;gap:8px;"><button class="tab-btn" id="rep-export-xlsx">⭳ Excel</button><button class="tab-btn active" id="rep-export-pdf">🖶 PDF</button></div>
+        </div>
+        <div class="printable" id="report-print-area" style="margin-top:8px;">
+          <div class="kpi-grid">${metricsHTML}</div>
+          <div class="card pad" style="margin-top:14px;background:var(--surface-2);border:none;">
+            <h2 class="section-h">${tpl.breakdownTitle}</h2>
+            <div class="funnel" style="margin-top:10px;">${breakdownHTML}</div>
+          </div>
+          <div class="grid-2" style="margin-top:14px;">
+            <div class="card pad"><h2 class="section-h">Расшифровка показателей</h2><ul style="margin:10px 0 0;padding-left:18px;font-size:12.3px;color:var(--ink-soft);display:flex;flex-direction:column;gap:6px;">${tpl.defs.map(d=>`<li>${d}</li>`).join('')}</ul></div>
+            <div class="card pad"><h2 class="section-h">Рекомендации</h2><ul style="margin:10px 0 0;padding-left:18px;font-size:12.3px;color:var(--ink-soft);display:flex;flex-direction:column;gap:6px;">${tpl.recs.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('rep-export-pdf').addEventListener('click', ()=>window.print());
+    document.getElementById('rep-export-xlsx').addEventListener('click', ()=>{
+      const wsData = [
+        ['Отчёт', tpl.label], ['Период', pLabel], ['Сформирован', nowStr], [],
+        ['Показатель','Значение'], ...tpl.metrics.map(m=>[m.label, computeMetricDisplay(m,days)]), [],
+        [tpl.breakdownTitle], ...tpl.breakdown.map(b=>[b.label, b.value]), [],
+        ['Расшифровка показателей'], ...tpl.defs.map(d=>[d]), [],
+        ['Рекомендации'], ...tpl.recs.map(r=>[r]),
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(wsData);
+      ws['!cols']=[{wch:46},{wch:26}];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Отчёт');
+      XLSX.writeFile(wb, `Отчёт — ${tpl.label} — ${pLabel}.xlsx`);
+    });
+  });
+}
+
+/* ---------------- ACCESS CONTROL ---------------- */
+const LEVEL_LABEL = {none:'Нет доступа', view:'Просмотр', edit:'Редактирование', full:'Полный доступ'};
+const LEVEL_COLOR = {none:'var(--muted)', view:'var(--info)', edit:'var(--warn)', full:'var(--good)'};
+function renderAccess(){
+  const head = `<thead><tr><th>Раздел</th>${ROLES.map(r=>`<th>${r}</th>`).join('')}</tr></thead>`;
+  const body = PERM_MODULES.map(m=>`<tr><td><b>${m.label}</b></td>${ROLES.map(r=>{
+      const val = PERMISSIONS[r][m.id];
+      return `<td><select class="perm-select" data-role="${r}" data-mod="${m.id}" style="color:${LEVEL_COLOR[val]};font-weight:700;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:5px 8px;">
+        ${Object.keys(LEVEL_LABEL).map(lv=>`<option value="${lv}" ${lv===val?'selected':''}>${LEVEL_LABEL[lv]}</option>`).join('')}
+      </select></td>`;
+    }).join('')}</tr>`).join('');
+  document.getElementById('access-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.querySelectorAll('.perm-select').forEach(sel=>{
+    sel.addEventListener('change', ()=>{
+      PERMISSIONS[sel.dataset.role][sel.dataset.mod] = sel.value;
+      LS.set('vika_permissions', PERMISSIONS);
+      sel.style.color = LEVEL_COLOR[sel.value];
+    });
+  });
+}
+
+/* ---------------- ADMIN PANEL ---------------- */
+function pushAudit(text){
+  AUDIT_LOG.unshift({when:'только что', who:'Виктория Коротынская', text});
+  LS.set('vika_audit', AUDIT_LOG);
+  renderAuditLog();
+}
+function renderAuditLog(){
+  document.getElementById('audit-log').innerHTML = AUDIT_LOG.map(a=>`<div class="list-row"><div class="dot info"></div><div class="t"><b>${a.who}</b><span>${a.text}</span></div><div class="meta">${a.when}</div></div>`).join('');
+}
+function renderAdmin(){
+  const activeCount = USERS.filter(u=>u.status==='active').length;
+  document.getElementById('admin-kpi').innerHTML = `
+    <div class="kpi"><div class="lbl">Активных пользователей</div><div class="val">${activeCount}</div><div class="delta up">из 15 по тарифу</div></div>
+    <div class="kpi"><div class="lbl">Ожидают приглашения</div><div class="val">${INVITES.filter(i=>i.status==='pending').length}</div><div class="delta info" style="background:var(--info-soft);color:var(--info);">отправлено на email</div></div>
+    <div class="kpi"><div class="lbl">Тариф</div><div class="val">Бизнес</div><div class="delta up">до 15 пользователей</div></div>`;
+
+  const roleSel = document.getElementById('invite-role');
+  roleSel.innerHTML = ROLES.map(r=>`<option value="${r}">${r}</option>`).join('');
+
+  function renderUsersTable(){
+    const head=`<thead><tr><th>Сотрудник</th><th>Email</th><th>Роль</th><th>Статус</th><th></th></tr></thead>`;
+    const body=USERS.map(u=>`<tr style="${u.status==='fired'?'opacity:.55;':''}">
+        <td><b style="${u.status==='fired'?'text-decoration:line-through;':''}">${u.name}</b></td><td class="num">${u.email}</td>
+        <td><select class="user-role-select" data-id="${u.id}">${ROLES.map(r=>`<option value="${r}" ${r===u.role?'selected':''}>${r}</option>`).join('')}</select></td>
+        <td><span class="pill ${u.status==='active'?'good':'crit'}">${u.status==='active'?'активен':'уволен'}</span></td>
+        <td><button class="tab-btn user-fire-btn" data-id="${u.id}">${u.status==='active'?'Уволить':'Восстановить'}</button></td>
+      </tr>`).join('');
+    document.getElementById('users-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+    document.querySelectorAll('.user-role-select').forEach(sel=>{
+      sel.addEventListener('change', ()=>{
+        const u = USERS.find(x=>x.id===sel.dataset.id); const oldRole=u.role;
+        u.role = sel.value; LS.set('vika_users', USERS);
+        pushAudit(`изменила роль сотрудника ${u.name}: ${oldRole} → ${u.role}`);
+      });
+    });
+    document.querySelectorAll('.user-fire-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const u = USERS.find(x=>x.id===btn.dataset.id);
+        u.status = u.status==='active' ? 'fired' : 'active';
+        LS.set('vika_users', USERS);
+        pushAudit(u.status==='fired' ? `отозвала доступ у сотрудника ${u.name}` : `восстановила доступ сотруднику ${u.name}`);
+        renderUsersTable(); renderAdmin();
+      });
+    });
+  }
+  renderUsersTable();
+
+  function renderInvitesTable(){
+    const card = document.getElementById('invites-card');
+    if(!INVITES.length){ card.hidden = true; return; }
+    card.hidden = false;
+    const head=`<thead><tr><th>Email</th><th>Роль</th><th>Отправлено</th><th>Статус</th><th></th></tr></thead>`;
+    const body=INVITES.map((inv,i)=>`<tr><td class="num">${inv.email}</td><td>${inv.role}</td><td class="num">${inv.sentAt}</td><td><span class="pill warn">ожидает</span></td><td><button class="tab-btn" data-cancel="${i}">Отменить</button></td></tr>`).join('');
+    document.getElementById('invites-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+    document.querySelectorAll('[data-cancel]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ INVITES.splice(+btn.dataset.cancel,1); LS.set('vika_invites',INVITES); renderInvitesTable(); renderAdmin(); });
+    });
+  }
+  renderInvitesTable();
+
+  document.getElementById('invite-send').addEventListener('click', ()=>{
+    const emailInp = document.getElementById('invite-email');
+    const email = emailInp.value.trim();
+    if(!email || !email.includes('@')) return;
+    INVITES.push({email, role:roleSel.value, sentAt:new Date().toLocaleDateString('ru-RU'), status:'pending'});
+    LS.set('vika_invites', INVITES);
+    pushAudit(`отправила приглашение на ${email} (роль: ${roleSel.value})`);
+    emailInp.value='';
+    renderInvitesTable(); renderAdmin();
+  });
+
+  renderAuditLog();
+}
+
+/* ---------------- SETTINGS ---------------- */
+function renderSettings(){
+  const fields=[['name','Организация'],['addr','Адрес'],['phone','Телефон']];
+  document.getElementById('settings-company').innerHTML = fields.map(([k,label])=>`<label class="field">${label}<input data-scompany="${k}" value="${COMPANY[k]}"></label>`).join('')
+    + `<label class="field">Часовой пояс<input value="Омск, UTC+6" disabled></label><label class="field">Рабочие часы<input value="Ежедневно 08:00–21:00" disabled></label>`;
+  document.querySelectorAll('[data-scompany]').forEach(inp=>{
+    inp.addEventListener('input', ()=>{ COMPANY[inp.dataset.scompany]=inp.value; LS.set('vika_company', COMPANY); });
+  });
+  const themeSel = document.getElementById('theme-select');
+  let savedTheme='system'; try{ savedTheme = localStorage.getItem('vika_theme')||'system'; }catch(e){}
+  themeSel.value = savedTheme;
+  themeSel.addEventListener('change', ()=> applyTheme(themeSel.value));
+}
+
+/* ---------------- INIT ---------------- */
+renderDashboard();
+renderLeads('all');
+renderKanban('kanban-b2c', B2C_STAGES, B2C_DEALS, dealStagesB2C, 'vika_b2c_stages');
+renderKanban('kanban-b2b', B2B_STAGES, B2B_DEALS, dealStagesB2B, 'vika_b2b_stages');
+renderOrders('all');
+renderDocuments();
+renderClients();
+renderCalendar();
+renderSubs();
+renderB2B();
+renderContactCenter();
+renderChat();
+renderAIAgent();
+renderKB();
+renderStock();
+renderStaff();
+renderTasks();
+renderImport();
+renderAnalytics();
+renderReports();
+renderAccess();
+renderAdmin();
+renderSettings();
+updateThemeIcon();
+document.getElementById('theme-toggle-btn').addEventListener('click', ()=>{
+  applyTheme(currentEffectiveTheme()==='dark' ? 'light' : 'dark');
+});
+</script>
