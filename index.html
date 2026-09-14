@@ -446,12 +446,12 @@
             <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;">
               <div>
                 <b style="font-size:12px;">Печать (PNG)</b><br>
-                <label class="upload-btn" for="stamp-file" style="margin-top:6px;">${ICONS.import} Загрузить PNG<input type="file" id="stamp-file" accept="image/png" style="display:none;"></label>
+                <label class="upload-btn" for="stamp-file" style="margin-top:6px;">Загрузить PNG<input type="file" id="stamp-file" accept="image/png" style="display:none;"></label>
                 <div id="stamp-preview" style="margin-top:8px;"></div>
               </div>
               <div>
                 <b style="font-size:12px;">Подпись (PNG)</b><br>
-                <label class="upload-btn" for="sign-file" style="margin-top:6px;">${ICONS.import} Загрузить PNG<input type="file" id="sign-file" accept="image/png" style="display:none;"></label>
+                <label class="upload-btn" for="sign-file" style="margin-top:6px;">Загрузить PNG<input type="file" id="sign-file" accept="image/png" style="display:none;"></label>
                 <div id="sign-preview" style="margin-top:8px;"></div>
               </div>
             </div>
@@ -1305,6 +1305,64 @@ function renderClients(){
   });
 }
 
+/* ---------------- PRINT / PDF ---------------- */
+const DOC_PRINT_CSS = `
+  *{box-sizing:border-box;}
+  body{margin:0;padding:28px;background:#fff;font-family:Arial,"Segoe UI",sans-serif;color:#1b1f23;}
+  .doc-page{max-width:760px;margin:0 auto;font-size:12.3px;}
+  .doc-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #1b1f23;padding-bottom:12px;margin-bottom:14px;}
+  .doc-num{text-align:right;font-weight:700;white-space:nowrap;}
+  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:14px;}
+  .doc-title{text-align:center;font-weight:700;font-size:16px;margin:4px 0 14px;}
+  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11.3px;}
+  table.doc-table th, table.doc-table td{border:1px solid #999;padding:6px 8px;text-align:left;}
+  table.doc-table td.num, table.doc-table th.num{text-align:right;}
+  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 22px;}
+  .doc-note{font-size:11.3px;color:#4a5560;margin:10px 0;}
+  .doc-sign-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .doc-sign{margin-top:22px;position:relative;font-size:11.6px;}
+  .doc-sign-line{position:relative;min-height:20px;}
+  .doc-sign-img{height:44px;position:absolute;left:70px;top:-30px;}
+  .doc-stamp-img{height:88px;opacity:.88;position:absolute;right:6px;top:-34px;}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 10px;font-size:12.5px;}
+  .kv b{color:#5b6b77;font-weight:600;}
+  @media print{ body{padding:0;} }
+`;
+const REPORT_PRINT_CSS = `
+  .card{border:1px solid #ccc;border-radius:8px;}
+  .pad{padding:14px;}
+  .section-h{font-weight:700;font-size:13px;margin:0 0 8px;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px;}
+  .kpi{border:1px solid #ccc;border-radius:8px;padding:10px 12px;}
+  .kpi .lbl{font-size:10.5px;color:#5b6b77;text-transform:uppercase;letter-spacing:.04em;font-weight:700;}
+  .kpi .val{font-size:20px;font-weight:700;margin-top:4px;}
+  .funnel{display:flex;flex-direction:column;gap:8px;}
+  .fstep{display:grid;grid-template-columns:150px 1fr 50px;gap:10px;align-items:center;font-size:12px;}
+  .ftrack{background:#eee;border-radius:99px;height:12px;overflow:hidden;}
+  .ffill{height:100%;background:#BE5C29;border-radius:99px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+`;
+function openPrintWindow(title, innerHtml, extraCss){
+  // Printed via a hidden same-page iframe rather than window.open(): a new tab/window
+  // depends on the browser's popup permission and produced blank pages when that
+  // permission wasn't granted; an iframe print is never blocked and always shows the content.
+  let iframe = document.getElementById('print-iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.id = 'print-iframe';
+    iframe.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+    document.body.appendChild(iframe);
+  }
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>${DOC_PRINT_CSS}${extraCss||''}</style></head><body>${innerHtml}</body></html>`);
+  doc.close();
+  setTimeout(()=>{
+    try{ iframe.contentWindow.focus(); iframe.contentWindow.print(); }
+    catch(e){ alert('Не удалось открыть печать: '+e.message); }
+  }, 300);
+}
+
 /* ---------------- DOCUMENTS ---------------- */
 function money(n){ return (Number(n)||0).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ₽'; }
 function docItemsTable(items, nameLabel){
@@ -1360,7 +1418,7 @@ function renderDocItemsTable(){
       <td><input class="doc-row-input" data-i="${i}" data-f="qty" type="number" min="0" value="${it.qty}"></td>
       <td><input class="doc-row-input" data-i="${i}" data-f="unit" value="${it.unit}"></td>
       <td><input class="doc-row-input" data-i="${i}" data-f="price" type="number" min="0" value="${it.price}"></td>
-      <td class="num">${money(it.qty*it.price)}</td>
+      <td class="num row-sum">${money(it.qty*it.price)}</td>
       <td><button class="drawer-close" data-remove="${i}" title="Удалить строку">✕</button></td>
     </tr>`).join('');
   document.getElementById('doc-items-table').innerHTML = head+'<tbody>'+body+'</tbody>';
@@ -1369,17 +1427,41 @@ function renderDocItemsTable(){
     inp.addEventListener('input', ()=>{
       const i=+inp.dataset.i, f=inp.dataset.f;
       docItems[i][f] = (f==='qty'||f==='price') ? Number(inp.value)||0 : inp.value;
-      renderDocItemsTable();
+      inp.closest('tr').querySelector('.row-sum').textContent = money(docItems[i].qty*docItems[i].price);
+      document.getElementById('doc-total-preview').textContent = money(docItems.reduce((s,it)=>s+it.qty*it.price,0));
     });
   });
   document.querySelectorAll('[data-remove]').forEach(btn=>{
     btn.addEventListener('click', ()=>{ docItems.splice(+btn.dataset.remove,1); if(!docItems.length) docItems.push({name:'',qty:1,unit:'шт',price:0}); renderDocItemsTable(); });
   });
 }
+function docTypeKey(typeLabel){
+  return typeLabel==='Счёт на оплату' ? 'invoice' : typeLabel==='Акт выполненных работ' ? 'act' : 'torg12';
+}
+function buildDocHTMLByType(typeKey, ctx){
+  return typeKey==='invoice' ? buildInvoiceHTML(ctx) : typeKey==='act' ? buildActHTML(ctx) : buildTorgHTML(ctx);
+}
 function renderDocLog(){
-  const head=`<thead><tr><th>№</th><th>Тип</th><th>Клиент / контрагент</th><th>Дата</th><th>Сумма</th><th>Статус</th></tr></thead>`;
-  const body=DOC_LOG.map(d=>`<tr><td class="num">№${d.id}</td><td>${d.type}</td><td>${d.client}</td><td class="num">${d.date}</td><td class="num">${d.amount}</td><td><span class="pill good">${d.status==='good'?'готов':d.status}</span></td></tr>`).join('');
+  const head=`<thead><tr><th>№</th><th>Тип</th><th>Клиент / контрагент</th><th>Дата</th><th>Сумма</th><th>Статус</th><th></th></tr></thead>`;
+  const body=DOC_LOG.map((d,i)=>`<tr><td class="num">№${d.id}</td><td>${d.type}</td><td>${d.client}</td><td class="num">${d.date}</td><td class="num">${d.amount}</td><td><span class="pill good">${d.status==='good'?'готов':d.status}</span></td><td><button class="tab-btn" data-open-doc="${i}">Открыть PDF</button></td></tr>`).join('');
   document.getElementById('doc-log-table').innerHTML = head+'<tbody>'+body+'</tbody>';
+  document.querySelectorAll('[data-open-doc]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const d = DOC_LOG[+btn.dataset.openDoc];
+      if(!d.html){
+        const typeKey = docTypeKey(d.type);
+        const sum = Number(String(d.amount).replace(/[^\d.,]/g,'').replace(',','.'))||0;
+        const fallbackCtx = {
+          company: COMPANY, assets: DOC_ASSETS, client: d.client, basis:'', num: d.id, date: d.date,
+          items:[{name: typeKey==='torg12' ? 'Товарная позиция' : 'Услуга по документу', qty:1, unit:'шт', price: sum}],
+          total: sum,
+        };
+        d.html = buildDocHTMLByType(typeKey, fallbackCtx);
+        LS.set('vika_doc_log', DOC_LOG);
+      }
+      openPrintWindow('Документ № '+d.id, d.html);
+    });
+  });
 }
 function renderDocuments(){
   const fields = [['name','Организация'],['inn','ИНН'],['ogrn','ОГРН/ОГРНИП'],['addr','Адрес'],['phone','Телефон'],['bank','Банк'],['rs','Расчётный счёт'],['ks','Корр. счёт'],['bik','БИК']];
@@ -1427,16 +1509,18 @@ function renderDocuments(){
     };
     if(!ctx.items.length) ctx.items=[{name:'—',qty:1,unit:'шт',price:0}];
     const typeLbl = {invoice:'Счёт на оплату', act:'Акт выполненных работ', torg12:'Накладная ТОРГ-12'};
-    const html = type==='invoice' ? buildInvoiceHTML(ctx) : type==='act' ? buildActHTML(ctx) : buildTorgHTML(ctx);
+    const html = buildDocHTMLByType(type, ctx);
     document.getElementById('doc-print-area').innerHTML = html;
     document.getElementById('doc-preview-card').hidden = false;
     document.getElementById('doc-preview-card').scrollIntoView({behavior:'smooth', block:'start'});
-    DOC_LOG.unshift({id:String(docCounter), type:typeLbl[type], client:ctx.client, date:today, amount:money(ctx.total), status:'good'});
+    DOC_LOG.unshift({id:String(docCounter), type:typeLbl[type], client:ctx.client, date:today, amount:money(ctx.total), status:'good', html});
     LS.set('vika_doc_log', DOC_LOG);
     renderDocLog();
     document.getElementById('doc-numdate').value = `№ ${docCounter+1} от ${today}`;
   });
-  document.getElementById('doc-print-btn').addEventListener('click', ()=>window.print());
+  document.getElementById('doc-print-btn').addEventListener('click', ()=>{
+    openPrintWindow('Документ', document.getElementById('doc-print-area').innerHTML);
+  });
 
   renderDocLog();
 }
@@ -1734,7 +1818,9 @@ function renderReports(){
           </div>
         </div>
       </div>`;
-    document.getElementById('rep-export-pdf').addEventListener('click', ()=>window.print());
+    document.getElementById('rep-export-pdf').addEventListener('click', ()=>{
+      openPrintWindow('Отчёт — '+tpl.label, document.getElementById('report-print-area').innerHTML, REPORT_PRINT_CSS);
+    });
     document.getElementById('rep-export-xlsx').addEventListener('click', ()=>{
       const wsData = [
         ['Отчёт', tpl.label], ['Период', pLabel], ['Сформирован', nowStr], [],
