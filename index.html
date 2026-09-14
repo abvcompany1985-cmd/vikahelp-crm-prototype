@@ -298,20 +298,48 @@
 
   /* printable document page — intentionally fixed "paper" look, independent of app theme */
   .doc-page{background:#ffffff;color:#1b1f23;border-radius:10px;padding:32px 36px;font-family:var(--font-body);font-size:12.3px;box-shadow:var(--shadow-md);max-width:760px;margin:0 auto;}
+  .doc-page.wide{max-width:1080px;}
+  .doc-codes-wrap{display:flex;justify-content:flex-end;margin-bottom:4px;}
+  .doc-codes-table{border-collapse:collapse;font-size:9.3px;}
+  .doc-codes-table td{border:1px solid #1b1f23;padding:2px 7px;}
+  .doc-codes-table .cap{text-align:center;font-weight:700;background:#eef0f2;}
+  .doc-formref{text-align:right;font-size:9.3px;color:#4a5560;margin-bottom:6px;}
+  .doc-org-block{font-size:10.6px;margin-bottom:6px;line-height:1.55;}
+  .doc-field-row{display:flex;gap:6px;font-size:10.6px;margin-bottom:5px;align-items:flex-end;}
+  .doc-field-row .lbl{color:#4a5560;white-space:nowrap;}
+  .doc-field-row .val{border-bottom:1px solid #1b1f23;flex:1;min-width:80px;padding:0 4px 1px;}
+  .doc-title-row{text-align:center;margin:12px 0 16px;}
+  .doc-title-row .t{font-family:var(--font-display);font-weight:700;font-size:16px;}
+  .doc-title-row .n{font-size:11.3px;margin-top:3px;color:#1b1f23;}
   .doc-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #1b1f23;padding-bottom:12px;margin-bottom:14px;}
   .doc-num{text-align:right;font-weight:700;white-space:nowrap;}
-  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:14px;}
-  .doc-title{text-align:center;font-family:var(--font-display);font-weight:700;font-size:16px;margin:4px 0 14px;color:#1b1f23;}
-  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11.3px;}
+  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:10px;}
+  .doc-basis-line{font-size:11px;color:#4a5560;margin-bottom:12px;}
+  .doc-title{text-align:center;font-family:var(--font-display);font-weight:700;font-size:15px;margin:4px 0 4px;color:#1b1f23;}
+  .doc-subtitle{text-align:center;font-size:10.6px;color:#4a5560;margin-bottom:14px;}
+  table.req-table{width:100%;border-collapse:collapse;font-size:10.4px;margin-bottom:14px;}
+  table.req-table td{border:1px solid #1b1f23;padding:4px 8px;vertical-align:middle;}
+  table.req-table td.rl{background:#eef0f2;font-weight:600;width:130px;}
+  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11.3px;}
   table.doc-table th, table.doc-table td{border:1px solid #999;padding:6px 8px;text-align:left;color:#1b1f23;}
   table.doc-table td.num, table.doc-table th.num{text-align:right;font-family:var(--font-mono);}
-  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 22px;}
+  table.torg-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:8.3px;}
+  table.torg-table th, table.torg-table td{border:1px solid #666;padding:3px 4px;text-align:center;color:#1b1f23;vertical-align:middle;}
+  table.torg-table td.name-cell{text-align:left;font-size:9px;}
+  table.torg-table tr.colnum td{background:#f3f4f5;font-size:7.6px;color:#666;}
+  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 10px;}
+  .doc-sumwords{font-size:11px;margin:4px 0 20px;border-top:1px solid #ccc;padding-top:8px;}
   .doc-note{font-size:11.3px;color:#4a5560;margin:10px 0;}
-  .doc-sign-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-  .doc-sign{margin-top:22px;position:relative;font-size:11.6px;}
-  .doc-sign-line{position:relative;min-height:20px;}
-  .doc-sign-img{height:44px;position:absolute;left:70px;top:-30px;pointer-events:none;}
-  .doc-stamp-img{height:88px;opacity:.88;position:absolute;right:6px;top:-34px;pointer-events:none;}
+  .doc-person-row{display:grid;grid-template-columns:190px repeat(3,1fr);gap:8px;align-items:end;margin-bottom:10px;}
+  .doc-person-row .role{font-size:10.6px;padding-bottom:4px;}
+  .doc-person-row .pline{display:flex;flex-direction:column;position:relative;}
+  .doc-person-row .pline .blank{border-bottom:1px solid #1b1f23;height:20px;}
+  .doc-person-row .pline .cap{font-size:7.8px;color:#4a5560;text-align:center;margin-top:1px;}
+  .doc-person-row .pline img.sig{position:absolute;bottom:16px;left:6px;height:26px;pointer-events:none;}
+  .doc-person-row .pline .stamp-ph{position:absolute;right:-10px;bottom:6px;width:50px;height:50px;border:1.2px dashed #99a2ab;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:6.8px;color:#99a2ab;text-transform:uppercase;letter-spacing:.03em;pointer-events:none;}
+  .doc-person-row .pline img.stamp-img{position:absolute;right:-18px;bottom:-4px;height:58px;opacity:.85;pointer-events:none;}
+  .doc-torg-footer{font-size:10.4px;margin:10px 0 16px;line-height:1.85;}
+  .doc-torg-footer .u{display:inline-block;border-bottom:1px solid #1b1f23;min-width:50px;padding:0 4px;}
   @media print{
     body *{visibility:hidden;}
     .printable, .printable *{visibility:visible;}
@@ -476,7 +504,7 @@
         </div>
         <div class="card pad" id="doc-preview-card" hidden>
           <div class="section-head"><h2 class="section-h">Предпросмотр</h2><button class="tab-btn active" id="doc-print-btn">🖶 Печать / сохранить PDF</button></div>
-          <div id="doc-print-area" style="margin-top:14px;"></div>
+          <div id="doc-print-area" style="margin-top:14px;overflow-x:auto;"></div>
         </div>
         <div class="card table-wrap">
           <table class="grid" id="doc-log-table"></table>
@@ -1077,7 +1105,7 @@ let taskState = LS.get('vika_tasks', Object.fromEntries(TASKS.map(t=>[t.id,{col:
 
 let COMPANY = LS.get('vika_company', {
   name:'«Вика-выручай» (уточните полное юр. название)',
-  inn:'________________', ogrn:'________________',
+  inn:'________________', kpp:'________________', ogrn:'________________',
   addr:'г. Омск, ул. 4-я Енисейская, 21', phone:'+7 (3812) 29-39-79',
   bank:'наименование банка', rs:'40702810_____________', ks:'30101810_____________', bik:'045209___'
 });
@@ -1089,6 +1117,7 @@ let DOC_LOG = LS.get('vika_doc_log', [
 ]);
 let docCounter = LS.get('vika_doc_counter', 108);
 let docItems = [{name:'', qty:1, unit:'шт', price:0}];
+let lastGeneratedDocType = 'invoice';
 
 /* ---------------- NAV ---------------- */
 const VIEWS = [
@@ -1310,20 +1339,48 @@ const DOC_PRINT_CSS = `
   *{box-sizing:border-box;}
   body{margin:0;padding:28px;background:#fff;font-family:Arial,"Segoe UI",sans-serif;color:#1b1f23;}
   .doc-page{max-width:760px;margin:0 auto;font-size:12.3px;}
+  .doc-page.wide{max-width:1080px;}
+  .doc-codes-wrap{display:flex;justify-content:flex-end;margin-bottom:4px;}
+  .doc-codes-table{border-collapse:collapse;font-size:9.3px;}
+  .doc-codes-table td{border:1px solid #1b1f23;padding:2px 7px;}
+  .doc-codes-table .cap{text-align:center;font-weight:700;background:#eef0f2;}
+  .doc-formref{text-align:right;font-size:9.3px;color:#4a5560;margin-bottom:6px;}
+  .doc-org-block{font-size:10.6px;margin-bottom:6px;line-height:1.55;}
+  .doc-field-row{display:flex;gap:6px;font-size:10.6px;margin-bottom:5px;align-items:flex-end;}
+  .doc-field-row .lbl{color:#4a5560;white-space:nowrap;}
+  .doc-field-row .val{border-bottom:1px solid #1b1f23;flex:1;min-width:80px;padding:0 4px 1px;}
+  .doc-title-row{text-align:center;margin:12px 0 16px;}
+  .doc-title-row .t{font-weight:700;font-size:16px;}
+  .doc-title-row .n{font-size:11.3px;margin-top:3px;}
   .doc-head{display:flex;justify-content:space-between;gap:20px;border-bottom:2px solid #1b1f23;padding-bottom:12px;margin-bottom:14px;}
   .doc-num{text-align:right;font-weight:700;white-space:nowrap;}
-  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:14px;}
-  .doc-title{text-align:center;font-weight:700;font-size:16px;margin:4px 0 14px;}
-  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:11.3px;}
+  .doc-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:11.6px;margin-bottom:10px;}
+  .doc-basis-line{font-size:11px;color:#4a5560;margin-bottom:12px;}
+  .doc-title{text-align:center;font-weight:700;font-size:15px;margin:4px 0 4px;}
+  .doc-subtitle{text-align:center;font-size:10.6px;color:#4a5560;margin-bottom:14px;}
+  table.req-table{width:100%;border-collapse:collapse;font-size:10.4px;margin-bottom:14px;}
+  table.req-table td{border:1px solid #1b1f23;padding:4px 8px;vertical-align:middle;}
+  table.req-table td.rl{background:#eef0f2;font-weight:600;width:130px;}
+  table.doc-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11.3px;}
   table.doc-table th, table.doc-table td{border:1px solid #999;padding:6px 8px;text-align:left;}
   table.doc-table td.num, table.doc-table th.num{text-align:right;}
-  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 22px;}
+  table.torg-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:8.3px;}
+  table.torg-table th, table.torg-table td{border:1px solid #666;padding:3px 4px;text-align:center;vertical-align:middle;}
+  table.torg-table td.name-cell{text-align:left;font-size:9px;}
+  table.torg-table tr.colnum td{background:#f3f4f5;font-size:7.6px;color:#666;}
+  .doc-total{text-align:right;font-size:13.5px;margin:6px 0 10px;}
+  .doc-sumwords{font-size:11px;margin:4px 0 20px;border-top:1px solid #ccc;padding-top:8px;}
   .doc-note{font-size:11.3px;color:#4a5560;margin:10px 0;}
-  .doc-sign-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-  .doc-sign{margin-top:22px;position:relative;font-size:11.6px;}
-  .doc-sign-line{position:relative;min-height:20px;}
-  .doc-sign-img{height:44px;position:absolute;left:70px;top:-30px;}
-  .doc-stamp-img{height:88px;opacity:.88;position:absolute;right:6px;top:-34px;}
+  .doc-person-row{display:grid;grid-template-columns:190px repeat(3,1fr);gap:8px;align-items:end;margin-bottom:10px;}
+  .doc-person-row .role{font-size:10.6px;padding-bottom:4px;}
+  .doc-person-row .pline{display:flex;flex-direction:column;position:relative;}
+  .doc-person-row .pline .blank{border-bottom:1px solid #1b1f23;height:20px;}
+  .doc-person-row .pline .cap{font-size:7.8px;color:#4a5560;text-align:center;margin-top:1px;}
+  .doc-person-row .pline img.sig{position:absolute;bottom:16px;left:6px;height:26px;}
+  .doc-person-row .pline .stamp-ph{position:absolute;right:-10px;bottom:6px;width:50px;height:50px;border:1.2px dashed #99a2ab;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:6.8px;color:#99a2ab;text-transform:uppercase;}
+  .doc-person-row .pline img.stamp-img{position:absolute;right:-18px;bottom:-4px;height:58px;opacity:.85;}
+  .doc-torg-footer{font-size:10.4px;margin:10px 0 16px;line-height:1.85;}
+  .doc-torg-footer .u{display:inline-block;border-bottom:1px solid #1b1f23;min-width:50px;padding:0 4px;}
   .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 10px;font-size:12.5px;}
   .kv b{color:#5b6b77;font-weight:600;}
   @media print{ body{padding:0;} }
@@ -1365,50 +1422,145 @@ function openPrintWindow(title, innerHtml, extraCss){
 
 /* ---------------- DOCUMENTS ---------------- */
 function money(n){ return (Number(n)||0).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' ₽'; }
+function formatDateLong(d){
+  const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  return `«${String(d.getDate()).padStart(2,'0')}» ${months[d.getMonth()]} ${d.getFullYear()} г.`;
+}
+function numToWordsRu(amount){
+  amount = Math.round((Number(amount)||0)*100);
+  const rub = Math.floor(amount/100), kop = amount%100;
+  const ones=['','один','два','три','четыре','пять','шесть','семь','восемь','девять'];
+  const onesF=['','одна','две','три','четыре','пять','шесть','семь','восемь','девять'];
+  const teens=['десять','одиннадцать','двенадцать','тринадцать','четырнадцать','пятнадцать','шестнадцать','семнадцать','восемнадцать','девятнадцать'];
+  const tens=['','','двадцать','тридцать','сорок','пятьдесят','шестьдесят','семьдесят','восемьдесят','девяносто'];
+  const huns=['','сто','двести','триста','четыреста','пятьсот','шестьсот','семьсот','восемьсот','девятьсот'];
+  function triple(n, fem){
+    const h=Math.floor(n/100), t=Math.floor((n%100)/10), o=n%10, parts=[];
+    if(h) parts.push(huns[h]);
+    if(t===1) parts.push(teens[o]); else { if(t) parts.push(tens[t]); if(o) parts.push(fem?onesF[o]:ones[o]); }
+    return parts.join(' ');
+  }
+  function plural(n, forms){ n=n%100; if(n>=11&&n<=14) return forms[2]; const l=n%10; if(l===1) return forms[0]; if(l>=2&&l<=4) return forms[1]; return forms[2]; }
+  const scales=[{v:1000000000,f:['миллиард','миллиарда','миллиардов'],fem:false},{v:1000000,f:['миллион','миллиона','миллионов'],fem:false},{v:1000,f:['тысяча','тысячи','тысяч'],fem:true}];
+  let rest=rub, parts=[];
+  scales.forEach(s=>{ const c=Math.floor(rest/s.v); if(c>0){ parts.push(triple(c,s.fem)); parts.push(plural(c,s.f)); rest%=s.v; } });
+  if(rest>0 || parts.length===0) parts.push(triple(rest,false));
+  if(rub===0) parts=['ноль'];
+  let text = parts.filter(Boolean).join(' ') + ' ' + plural(rub,['рубль','рубля','рублей']) + ' ' + String(kop).padStart(2,'0') + ' ' + plural(kop,['копейка','копейки','копеек']);
+  return text.charAt(0).toUpperCase()+text.slice(1);
+}
 function docItemsTable(items, nameLabel){
   const rows = items.map((it,i)=>`<tr><td>${i+1}</td><td>${it.name||'—'}</td><td class="num">${it.qty}</td><td>${it.unit}</td><td class="num">${money(it.price)}</td><td class="num">${money(it.qty*it.price)}</td></tr>`).join('');
   return `<table class="doc-table"><thead><tr><th>№</th><th>${nameLabel}</th><th class="num">Кол-во</th><th>Ед.</th><th class="num">Цена</th><th class="num">Сумма</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function docSignBlock(ctx, label, withStamp){
-  return `<div class="doc-sign"><div class="doc-sign-line">${label}: _____________________ ${ctx.assets.signature?`<img class="doc-sign-img" src="${ctx.assets.signature}">`:''}</div>
-    ${withStamp && ctx.assets.stamp ? `<img class="doc-stamp-img" src="${ctx.assets.stamp}">` : ''}</div>`;
+function torgItemsTable(items){
+  const rows = items.map((it,i)=>`<tr>
+      <td>${i+1}</td><td class="name-cell">${it.name||'—'}</td><td>—</td>
+      <td>${it.unit}</td><td>796</td><td>—</td>
+      <td>${it.qty}</td><td>${it.qty}</td>
+      <td>—</td><td>—</td>
+      <td>${(it.price).toFixed(2)}</td><td>${(it.qty*it.price).toFixed(2)}</td>
+      <td>без НДС</td><td>—</td><td>${(it.qty*it.price).toFixed(2)}</td>
+    </tr>`).join('');
+  return `<table class="torg-table">
+    <thead>
+      <tr>
+        <th rowspan="3">№<br>п/п</th><th rowspan="3">Товар</th><th rowspan="3">Код</th>
+        <th colspan="2">Единица измерения</th><th rowspan="3">Вид упаковки</th>
+        <th colspan="2">Количество</th>
+        <th rowspan="3">Масса брутто</th><th rowspan="3">Количество (масса нетто)</th>
+        <th rowspan="3">Цена,<br>руб. коп.</th><th rowspan="3">Сумма без учёта НДС,<br>руб. коп.</th>
+        <th colspan="2">НДС</th><th rowspan="3">Сумма с учётом НДС,<br>руб. коп.</th>
+      </tr>
+      <tr><th>наимено-вание</th><th>код</th><th>в одном месте</th><th>мест, шт</th><th>ставка,%</th><th>сумма</th></tr>
+      <tr class="colnum"><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td></tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+function reqTable(company){
+  return `<table class="req-table"><tbody>
+    <tr><td class="rl" rowspan="2">Банк получателя</td><td rowspan="2">${company.bank}</td><td class="rl">БИК</td><td>${company.bik}</td></tr>
+    <tr><td class="rl">Сч. №</td><td>${company.ks}</td></tr>
+    <tr><td class="rl" rowspan="2">Получатель</td><td rowspan="2">${company.name}<br>ИНН ${company.inn}, КПП ${company.kpp||'—'}</td><td class="rl">Сч. №</td><td>${company.rs}</td></tr>
+    <tr><td class="rl">ОГРН</td><td>${company.ogrn}</td></tr>
+  </tbody></table>`;
+}
+function docPersonRow(role, ctx, withSig, withStamp){
+  const sig = withSig && ctx.assets.signature ? `<img class="sig" src="${ctx.assets.signature}">` : '';
+  const stamp = withStamp ? (ctx.assets.stamp ? `<img class="stamp-img" src="${ctx.assets.stamp}">` : `<div class="stamp-ph">М.П.</div>`) : '';
+  return `<div class="doc-person-row">
+    <div class="role">${role}</div>
+    <div class="pline"><div class="blank"></div><div class="cap">должность</div></div>
+    <div class="pline">${sig}${stamp}<div class="blank"></div><div class="cap">подпись</div></div>
+    <div class="pline"><div class="blank"></div><div class="cap">расшифровка подписи</div></div>
+  </div>`;
 }
 function buildInvoiceHTML(ctx){
   return `<div class="doc-page">
-    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr} · тел. ${ctx.company.phone}</div><div class="doc-num">Счёт на оплату № ${ctx.num}<br>от ${ctx.date}</div></div>
+    ${reqTable(ctx.company)}
+    <div class="doc-title-row"><div class="t">Счёт на оплату № ${ctx.num}</div><div class="n">от ${ctx.dateLong||ctx.date}</div></div>
     <div class="doc-parties">
-      <div><b>Поставщик:</b> ${ctx.company.name}<br>Банк: ${ctx.company.bank}, р/с ${ctx.company.rs}<br>к/с ${ctx.company.ks}, БИК ${ctx.company.bik}</div>
-      <div><b>Покупатель:</b> ${ctx.client}${ctx.basis?('<br>Основание: '+ctx.basis):''}</div>
+      <div><b>Поставщик:</b> ${ctx.company.name}, ИНН ${ctx.company.inn}, ${ctx.company.addr}, тел. ${ctx.company.phone}</div>
+      <div><b>Покупатель:</b> ${ctx.client}</div>
     </div>
-    ${docItemsTable(ctx.items,'Наименование услуги')}
-    <div class="doc-total">Итого к оплате: <b>${money(ctx.total)}</b><br><span style="font-size:10.8px;color:#4a5560;">НДС не облагается (УСН)</span></div>
-    ${docSignBlock(ctx,'Руководитель',true)}
+    <div class="doc-basis-line">Основание: ${ctx.basis || 'без договора'}</div>
+    ${docItemsTable(ctx.items,'Товары (работы, услуги)')}
+    <div class="doc-total">
+      Итого: <b>${money(ctx.total)}</b><br>
+      В том числе НДС: <b>без НДС (УСН)</b><br>
+      Всего к оплате: <b>${money(ctx.total)}</b>
+    </div>
+    <div class="doc-sumwords">Всего наименований ${ctx.items.length}, на сумму ${money(ctx.total)}.<br>${numToWordsRu(ctx.total)}</div>
+    ${docPersonRow('Руководитель', ctx, true, true)}
+    ${docPersonRow('Бухгалтер', ctx, false, false)}
   </div>`;
 }
 function buildActHTML(ctx){
   return `<div class="doc-page">
-    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr} · тел. ${ctx.company.phone}</div><div class="doc-num">Акт № ${ctx.num}<br>от ${ctx.date}</div></div>
-    <div class="doc-title">Акт выполненных работ</div>
-    <div class="doc-parties"><div><b>Исполнитель:</b> ${ctx.company.name}</div><div><b>Заказчик:</b> ${ctx.client}${ctx.basis?('<br>Основание: '+ctx.basis):''}</div></div>
-    ${docItemsTable(ctx.items,'Наименование работ / услуг')}
-    <div class="doc-total">Итого выполнено на сумму: <b>${money(ctx.total)}</b></div>
-    <p class="doc-note">Работы выполнены полностью и в срок. Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.</p>
-    <div class="doc-sign-row">${docSignBlock(ctx,'Исполнитель',true)}${docSignBlock(ctx,'Заказчик',false)}</div>
+    <div class="doc-title-row"><div class="t">Акт № ${ctx.num} сдачи-приёмки выполненных работ (оказанных услуг)</div><div class="n">г. Омск&nbsp;&nbsp;&nbsp;&nbsp;от ${ctx.dateLong||ctx.date}</div></div>
+    <div class="doc-parties">
+      <div><b>Исполнитель:</b> ${ctx.company.name}, ИНН ${ctx.company.inn}, ${ctx.company.addr}</div>
+      <div><b>Заказчик:</b> ${ctx.client}</div>
+    </div>
+    <div class="doc-basis-line">${ctx.basis ? 'Составлен на основании: '+ctx.basis : 'Составлен по факту оказания услуг без отдельного договора'}</div>
+    <p class="doc-note">Мы, нижеподписавшиеся, составили настоящий акт о том, что Исполнителем были выполнены, а Заказчиком приняты следующие работы (услуги):</p>
+    ${docItemsTable(ctx.items,'Наименование работ (услуг)')}
+    <div class="doc-total">Общая стоимость составляет: <b>${money(ctx.total)}</b></div>
+    <div class="doc-sumwords">${numToWordsRu(ctx.total)}</div>
+    <p class="doc-note">Вышеперечисленные работы (услуги) выполнены полностью и в срок. Заказчик претензий по объёму, качеству и срокам оказания услуг не имеет.</p>
+    ${docPersonRow('Исполнитель', ctx, true, true)}
+    ${docPersonRow('Заказчик', ctx, false, true)}
   </div>`;
 }
 function buildTorgHTML(ctx){
-  return `<div class="doc-page">
-    <div class="doc-head"><div><b>${ctx.company.name}</b><br>ИНН ${ctx.company.inn} · ${ctx.company.addr}</div><div class="doc-num">Товарная накладная № ${ctx.num}<br>от ${ctx.date}<br><span style="font-size:10.3px;color:#4a5560;">Форма ТОРГ-12</span></div></div>
-    <div class="kv" style="grid-template-columns:150px 1fr;margin-bottom:12px;color:#1b1f23;">
-      <b>Грузоотправитель</b><span>${ctx.company.name}, ${ctx.company.addr}</span>
-      <b>Грузополучатель</b><span>${ctx.client}</span>
-      <b>Поставщик</b><span>${ctx.company.name}, ИНН ${ctx.company.inn}</span>
-      <b>Плательщик</b><span>${ctx.client}</span>
-      <b>Основание</b><span>${ctx.basis||'договор поставки'}</span>
+  return `<div class="doc-page wide">
+    <div class="doc-codes-wrap"><table class="doc-codes-table"><tbody>
+      <tr><td class="cap" colspan="2">Коды</td></tr>
+      <tr><td>Форма по ОКУД</td><td>0330212</td></tr>
+      <tr><td>по ОКПО</td><td>—</td></tr>
+    </tbody></table></div>
+    <div class="doc-formref">Унифицированная форма № ТОРГ-12<br>Утверждена постановлением Госкомстата России от 25.12.98 № 132</div>
+    <div class="doc-org-block"><b>Грузоотправитель:</b> ${ctx.company.name}, ${ctx.company.addr}, ИНН ${ctx.company.inn}, КПП ${ctx.company.kpp||'—'}</div>
+    <div class="doc-org-block"><b>Грузополучатель:</b> ${ctx.client}</div>
+    <div class="doc-org-block"><b>Поставщик:</b> ${ctx.company.name}, ИНН ${ctx.company.inn}, банк: ${ctx.company.bank}, р/с ${ctx.company.rs}</div>
+    <div class="doc-org-block"><b>Плательщик:</b> ${ctx.client}</div>
+    <div class="doc-field-row"><span class="lbl">Основание:</span><span class="val">${ctx.basis || 'договор поставки'}</span></div>
+    <div class="doc-field-row"><span class="lbl">Транспортная накладная:</span><span class="val">—</span></div>
+    <div class="doc-title-row"><div class="t">Товарная накладная</div><div class="n">Номер документа ${ctx.num}&nbsp;&nbsp;&nbsp;&nbsp;Дата составления ${ctx.date}</div></div>
+    ${torgItemsTable(ctx.items)}
+    <div class="doc-total">Всего по накладной: ${ctx.items.length} наименований на сумму <b>${money(ctx.total)}</b></div>
+    <div class="doc-torg-footer">
+      Товарная накладная имеет приложение на <span class="u">—</span> листах и содержит <span class="u">${ctx.items.length}</span> порядковых номеров записей.<br>
+      Масса груза (нетто) <span class="u">—</span>&nbsp;&nbsp;&nbsp;Всего мест <span class="u">${ctx.items.length}</span>&nbsp;&nbsp;&nbsp;Масса груза (брутто) <span class="u">—</span><br>
+      Приложение (паспорта, сертификаты и т.п.) на <span class="u">—</span> листах.
     </div>
-    ${docItemsTable(ctx.items,'Товар')}
-    <div class="doc-total">Всего отпущено на сумму: <b>${money(ctx.total)}</b></div>
-    <div class="doc-sign-row">${docSignBlock(ctx,'Отпуск разрешил / отпустил',true)}${docSignBlock(ctx,'Груз принял / получил',false)}</div>
+    ${docPersonRow('Отпуск груза разрешил', ctx, false, false)}
+    ${docPersonRow('Главный (старший) бухгалтер', ctx, false, false)}
+    ${docPersonRow('Отпуск груза произвёл', ctx, true, true)}
+    <div class="doc-note" style="margin:14px 0 4px;">Груз принял (грузополучатель):</div>
+    ${docPersonRow('Груз принял', ctx, false, false)}
+    ${docPersonRow('Груз получил грузополучатель', ctx, false, true)}
   </div>`;
 }
 function renderDocItemsTable(){
@@ -1452,19 +1604,20 @@ function renderDocLog(){
         const typeKey = docTypeKey(d.type);
         const sum = Number(String(d.amount).replace(/[^\d.,]/g,'').replace(',','.'))||0;
         const fallbackCtx = {
-          company: COMPANY, assets: DOC_ASSETS, client: d.client, basis:'', num: d.id, date: d.date,
+          company: COMPANY, assets: DOC_ASSETS, client: d.client, basis:'', num: d.id, date: d.date, dateLong: d.date,
           items:[{name: typeKey==='torg12' ? 'Товарная позиция' : 'Услуга по документу', qty:1, unit:'шт', price: sum}],
           total: sum,
         };
         d.html = buildDocHTMLByType(typeKey, fallbackCtx);
         LS.set('vika_doc_log', DOC_LOG);
       }
-      openPrintWindow('Документ № '+d.id, d.html);
+      const extra = docTypeKey(d.type)==='torg12' ? '@page{size:landscape;}' : '';
+      openPrintWindow('Документ № '+d.id, d.html, extra);
     });
   });
 }
 function renderDocuments(){
-  const fields = [['name','Организация'],['inn','ИНН'],['ogrn','ОГРН/ОГРНИП'],['addr','Адрес'],['phone','Телефон'],['bank','Банк'],['rs','Расчётный счёт'],['ks','Корр. счёт'],['bik','БИК']];
+  const fields = [['name','Организация'],['inn','ИНН'],['kpp','КПП'],['ogrn','ОГРН/ОГРНИП'],['addr','Адрес'],['phone','Телефон'],['bank','Банк'],['rs','Расчётный счёт'],['ks','Корр. счёт'],['bik','БИК']];
   document.getElementById('company-fields').innerHTML = fields.map(([k,label])=>`<label class="field">${label}<input data-company="${k}" value="${COMPANY[k]}"></label>`).join('');
   document.querySelectorAll('[data-company]').forEach(inp=>{
     inp.addEventListener('input', ()=>{ COMPANY[inp.dataset.company]=inp.value; LS.set('vika_company', COMPANY); });
@@ -1473,7 +1626,9 @@ function renderDocuments(){
   const clientSel = document.getElementById('doc-client');
   clientSel.innerHTML = CLIENTS.map(c=>`<option value="${c.name}">${c.name}</option>`).join('') + `<option value="__other">Другое (ввести вручную в поле «Основание»)</option>`;
 
-  const today = new Date().toLocaleDateString('ru-RU');
+  const todayDate = new Date();
+  const today = todayDate.toLocaleDateString('ru-RU');
+  const todayLong = formatDateLong(todayDate);
   document.getElementById('doc-numdate').value = `№ ${docCounter+1} от ${today}`;
 
   const ASSET_PREVIEW_EL = {stamp:'stamp-preview', signature:'sign-preview'};
@@ -1498,12 +1653,13 @@ function renderDocuments(){
   document.getElementById('doc-generate').addEventListener('click', ()=>{
     docCounter++; LS.set('vika_doc_counter', docCounter);
     const type = document.getElementById('doc-type').value;
+    lastGeneratedDocType = type;
     const clientVal = clientSel.value;
     const ctx = {
       company: COMPANY, assets: DOC_ASSETS,
       client: clientVal==='__other' ? (document.getElementById('doc-basis').value || 'Клиент не указан') : clientVal,
       basis: document.getElementById('doc-basis').value,
-      num: docCounter, date: today,
+      num: docCounter, date: today, dateLong: todayLong,
       items: docItems.filter(it=>it.name||it.qty||it.price),
       total: docItems.reduce((s,it)=>s+it.qty*it.price,0),
     };
@@ -1519,7 +1675,8 @@ function renderDocuments(){
     document.getElementById('doc-numdate').value = `№ ${docCounter+1} от ${today}`;
   });
   document.getElementById('doc-print-btn').addEventListener('click', ()=>{
-    openPrintWindow('Документ', document.getElementById('doc-print-area').innerHTML);
+    const extra = lastGeneratedDocType==='torg12' ? '@page{size:landscape;}' : '';
+    openPrintWindow('Документ', document.getElementById('doc-print-area').innerHTML, extra);
   });
 
   renderDocLog();
